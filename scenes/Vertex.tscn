@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://d2f2m3opf81eh"]
+
+[ext_resource type="Script" uid="uid://dslf2cwt1mpg2" path="res://scripts/Vertex.gd" id="1_g5dmd"]
+[ext_resource type="Texture2D" uid="uid://byf2et0mr1n27" path="res://svgs/vertex_idle.svg" id="2_wdlo7"]
+[ext_resource type="Texture2D" uid="uid://dab8daqyji17k" path="res://svgs/vertex_dragged.svg" id="3_fb6rc"]
+[ext_resource type="Texture2D" uid="uid://d4ayaj7r7c5kl" path="res://svgs/vertex_selected.svg" id="4_ab7a8"]
+[ext_resource type="FontFile" uid="uid://clrq58jn7i0si" path="res://fonts/DejaVuSans-Bold.ttf" id="5_fb6rc"]
+
+[node name="Vertex" type="Sprite2D"]
+texture = ExtResource("2_wdlo7")
+script = ExtResource("1_g5dmd")
+color_idle = ExtResource("2_wdlo7")
+color_dragged = ExtResource("3_fb6rc")
+color_selected = ExtResource("4_ab7a8")
+radius = 32.0
+
+[node name="id_label" type="RichTextLabel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -52.0
+offset_top = -53.0
+offset_right = -12.0
+offset_bottom = -11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("5_fb6rc")
+theme_override_font_sizes/bold_italics_font_size = 25
+theme_override_font_sizes/italics_font_size = 25
+theme_override_font_sizes/mono_font_size = 25
+theme_override_font_sizes/normal_font_size = 25
+theme_override_font_sizes/bold_font_size = 25
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 171

@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://dyx4vy26afcnx"]
+
+[ext_resource type="Script" uid="uid://qpnqp3mgn3m7" path="res://scripts/LimitedGraphEditor.gd" id="1_85oq4"]
+[ext_resource type="PackedScene" uid="uid://d2f2m3opf81eh" path="res://scenes/Vertex.tscn" id="2_5sdjk"]
+[ext_resource type="Script" uid="uid://cxok7kwyvbpak" path="res://scenes/check_button.gd" id="3_5sdjk"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_5sdjk"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_w1mwu"]
+mesh = SubResource("QuadMesh_5sdjk")
+
+[node name="LimitedGraphEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_85oq4")
+VertexScene = ExtResource("2_5sdjk")
+type = null
+metadata/_custom_type_script = "uid://d23da056etjjn"
+
+[node name="EdgesBatch" type="MultiMeshInstance2D" parent="."]
+multimesh = SubResource("MultiMesh_w1mwu")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -79.0
+offset_top = -67.0
+offset_right = -35.0
+offset_bottom = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer"]
+layout_mode = 2
+expand_icon = true
+script = ExtResource("3_5sdjk")

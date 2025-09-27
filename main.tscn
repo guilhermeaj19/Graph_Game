@@ -1,0 +1,118 @@
+[gd_scene load_steps=7 format=3 uid="uid://2ld3cbsgamqo"]
+
+[ext_resource type="Script" uid="uid://x7imlnhtc480" path="res://question_euleriano.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://dyx4vy26afcnx" path="res://scenes/LimitedGraphEditor.tscn" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://cxok7kwyvbpak" path="res://scenes/check_button.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://c3u5nmi5oxh5v" path="res://addons/godot_llm_framework/llm.gd" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://cmhtv0cbbkpmb" path="res://addons/godot_llm_framework/llm_config.gd" id="5_lquwl"]
+
+[sub_resource type="Resource" id="Resource_7mycd"]
+script = ExtResource("5_lquwl")
+provider = 2
+api_config_path = "res://config_api.cfg"
+model = "HuggingFaceTB/SmolLM3-3B"
+temperature = 0.7
+max_message_history = 20
+additional_parameters = {}
+metadata/_custom_type_script = "uid://cmhtv0cbbkpmb"
+
+[node name="Question" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0xm2m")
+metadata/_custom_type_script = "uid://x7imlnhtc480"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.178418, 0.517243, 0.512353, 1)
+
+[node name="SplitContainer" type="SplitContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.16
+dragging_enabled = false
+
+[node name="Label" type="Label" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "CRIE UM GRAFO COM CICLO EULERIANO DE FORMA UTILIZANDO 10 VÉRTICES E 14 ARESTAS. NO CAMPO ABAIXO, JUSTIFIQUE SUA RESPOSTA."
+autowrap_mode = 3
+
+[node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+wrap_mode = 1
+
+[node name="ButtonSend" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 164.0
+offset_right = 375.0
+offset_bottom = 195.0
+text = "Send"
+
+[node name="RespostaIA" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.5
+wrap_mode = 1
+
+[node name="LimitedGraphEditor" parent="ColorRect/SplitContainer" instance=ExtResource("2_0xm2m")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.45
+type = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -79.0
+offset_top = -67.0
+offset_right = -35.0
+offset_bottom = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer"]
+layout_mode = 2
+expand_icon = true
+script = ExtResource("3_h2yge")
+
+[node name="LLM" type="Node" parent="."]
+script = ExtResource("4_1bvp3")
+config = SubResource("Resource_7mycd")
+metadata/_custom_type_script = "uid://c3u5nmi5oxh5v"
+
+[connection signal="pressed" from="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva/ButtonSend" to="." method="_on_button_send_pressed"]
