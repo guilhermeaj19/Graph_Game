@@ -21,8 +21,12 @@ func avaliar_resposta():
 		 "role": "user",
 		 "content": "Resposta: " + resposta.text,
 		},
+		{
+		 "role": "user",
+		 "content": "Vértices: " + str(vertices) + "\n" + "Arestas: " + str(edges),
+		},
 		{"role": "user", 
-		 "content": "Avalie, em até 300 caracteres, essa resposta e atribua uma nota de 0 a 10 com justificativa."
+		 "content": "Avalie, em até 300 caracteres, essa resposta e atribua uma nota de 0 a 10, justificando a nota."
 		}
 		]
 
