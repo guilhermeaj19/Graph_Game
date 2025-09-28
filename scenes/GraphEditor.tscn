@@ -18,9 +18,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lupl7")
 VertexScene = ExtResource("2_t7pmw")
+graph_type = 0
 metadata/_custom_type_script = "uid://d23da056etjjn"
 
 [node name="EdgesBatch" type="MultiMeshInstance2D" parent="."]
+multimesh = SubResource("MultiMesh_354rq")
+
+[node name="ArrowsBatch" type="MultiMeshInstance2D" parent="."]
 multimesh = SubResource("MultiMesh_354rq")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

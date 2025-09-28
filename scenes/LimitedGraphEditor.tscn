@@ -18,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_85oq4")
 VertexScene = ExtResource("2_5sdjk")
-type = null
+graph_type = null
 metadata/_custom_type_script = "uid://d23da056etjjn"
 
 [node name="EdgesBatch" type="MultiMeshInstance2D" parent="."]
