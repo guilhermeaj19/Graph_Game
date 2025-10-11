@@ -8,12 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_7mycd"]
 script = ExtResource("5_lquwl")
-provider = 2
-api_config_path = "res://config_api.cfg"
 model = "HuggingFaceTB/SmolLM3-3B"
-temperature = 0.7
-max_message_history = 20
-additional_parameters = {}
 metadata/_custom_type_script = "uid://cmhtv0cbbkpmb"
 
 [node name="Question" type="Control"]
@@ -71,9 +66,9 @@ wrap_mode = 1
 
 [node name="ButtonSend" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva"]
 layout_mode = 0
-offset_left = 328.0
+offset_left = 327.0
 offset_top = 164.0
-offset_right = 375.0
+offset_right = 374.0
 offset_bottom = 195.0
 text = "Send"
 
@@ -89,7 +84,7 @@ wrap_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.45
-graph_type = null
+graph_type = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
