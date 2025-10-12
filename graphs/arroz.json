@@ -1,0 +1,41 @@
+{
+  "edges": [
+    {
+      "from_id": 2,
+      "to_id": 0,
+      "weight": 10021
+    },
+    {
+      "from_id": 0,
+      "to_id": 5,
+      "weight": 1
+    },
+    {
+      "from_id": 5,
+      "to_id": 2,
+      "weight": 1
+    }
+  ],
+  "meta": {
+    "graph_type": "NAO_DIRIGIDO",
+    "next_id_vertex": 3,
+    "ponderado": true
+  },
+  "vertices": [
+    {
+      "id": 0,
+      "pos_x": 0.635416666666667,
+      "pos_y": 0.361111106551996
+    },
+    {
+      "id": 5,
+      "pos_x": 0.4296875,
+      "pos_y": 0.586419749540441
+    },
+    {
+      "id": 2,
+      "pos_x": 0.621527777777778,
+      "pos_y": 0.621913570115546
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3f7t1wqf2mpd"]
+
+[ext_resource type="Script" uid="uid://bxit5iw67b3wf" path="res://scripts/weight_display.gd" id="1_ktalh"]
+[ext_resource type="FontFile" uid="uid://clrq58jn7i0si" path="res://fonts/DejaVuSans-Bold.ttf" id="2_vujaa"]
+
+[node name="WeightDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_ktalh")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextLabel" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_vujaa")
+horizontal_alignment = 1
+vertical_alignment = 1

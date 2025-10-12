@@ -1,13 +1,27 @@
-[gd_scene load_steps=6 format=3 uid="uid://cnihu3ka5c5ul"]
+[gd_scene load_steps=9 format=3 uid="uid://cnihu3ka5c5ul"]
 
 [ext_resource type="Script" uid="uid://d23da056etjjn" path="res://scripts/GraphEditor.gd" id="1_lupl7"]
 [ext_resource type="PackedScene" uid="uid://d2f2m3opf81eh" path="res://scenes/Vertex.tscn" id="2_t7pmw"]
+[ext_resource type="PackedScene" uid="uid://b3f7t1wqf2mpd" path="res://scenes/WeightDisplay.tscn" id="3_354rq"]
 [ext_resource type="Script" uid="uid://cxok7kwyvbpak" path="res://scenes/check_button.gd" id="3_l02cc"]
 
-[sub_resource type="QuadMesh" id="QuadMesh_l02cc"]
+[sub_resource type="QuadMesh" id="QuadMesh_354rq"]
 
-[sub_resource type="MultiMesh" id="MultiMesh_354rq"]
-mesh = SubResource("QuadMesh_l02cc")
+[sub_resource type="MultiMesh" id="MultiMesh_h4cs2"]
+mesh = SubResource("QuadMesh_354rq")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_h4cs2"]
+_surfaces = [{
+"aabb": AABB(-1, -0.5, 0, 1, 1, 1e-05),
+"format": 34359738369,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 3,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 0, 191, 0, 0, 0, 0)
+}]
+
+[sub_resource type="MultiMesh" id="MultiMesh_a3che"]
+mesh = SubResource("ArrayMesh_h4cs2")
 
 [node name="GraphEditor" type="Control"]
 layout_mode = 3
@@ -18,14 +32,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lupl7")
 VertexScene = ExtResource("2_t7pmw")
-graph_type = 0
+WeightDisplayScene = ExtResource("3_354rq")
+graph_file_path = "res://arroz.json"
 metadata/_custom_type_script = "uid://d23da056etjjn"
 
 [node name="EdgesBatch" type="MultiMeshInstance2D" parent="."]
-multimesh = SubResource("MultiMesh_354rq")
+multimesh = SubResource("MultiMesh_h4cs2")
 
 [node name="ArrowsBatch" type="MultiMeshInstance2D" parent="."]
-multimesh = SubResource("MultiMesh_354rq")
+z_index = 1
+multimesh = SubResource("MultiMesh_a3che")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -45,3 +61,11 @@ grow_vertical = 0
 layout_mode = 2
 expand_icon = true
 script = ExtResource("3_l02cc")
+
+[node name="WeightsContainer" type="Node2D" parent="."]
+
+[node name="WeightEditor" type="LineEdit" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 68.5625
+offset_bottom = 31.0

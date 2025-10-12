@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://2ld3cbsgamqo"]
 
 [ext_resource type="Script" uid="uid://x7imlnhtc480" path="res://question_euleriano.gd" id="1_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://dyx4vy26afcnx" path="res://scenes/LimitedGraphEditor.tscn" id="2_0xm2m"]
-[ext_resource type="Script" uid="uid://cxok7kwyvbpak" path="res://scenes/check_button.gd" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://cnihu3ka5c5ul" path="res://scenes/GraphEditor.tscn" id="2_7mycd"]
+[ext_resource type="Script" uid="uid://qpnqp3mgn3m7" path="res://scripts/LimitedGraphEditor.gd" id="3_272bh"]
 [ext_resource type="Script" uid="uid://c3u5nmi5oxh5v" path="res://addons/godot_llm_framework/llm.gd" id="4_1bvp3"]
 [ext_resource type="Script" uid="uid://cmhtv0cbbkpmb" path="res://addons/godot_llm_framework/llm_config.gd" id="5_lquwl"]
 
@@ -54,7 +54,7 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "CRIE UM GRAFO COM CICLO EULERIANO DE FORMA UTILIZANDO 10 VÉRTICES E 14 ARESTAS. NO CAMPO ABAIXO, JUSTIFIQUE SUA RESPOSTA."
+text = "CRIE UM GRAFO COM CICLO EULERIANO DE FORMA UTILIZANDO 3 VÉRTICES E 3 ARESTAS. NO CAMPO ABAIXO, JUSTIFIQUE SUA RESPOSTA."
 autowrap_mode = 3
 
 [node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
@@ -80,30 +80,15 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 2.5
 wrap_mode = 1
 
-[node name="LimitedGraphEditor" parent="ColorRect/SplitContainer" instance=ExtResource("2_0xm2m")]
+[node name="GraphEditor" parent="ColorRect/SplitContainer" instance=ExtResource("2_7mycd")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.45
-graph_type = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -79.0
-offset_top = -67.0
-offset_right = -35.0
-offset_bottom = -27.0
-grow_horizontal = 0
-grow_vertical = 0
-
-[node name="CheckButton" type="CheckButton" parent="MarginContainer"]
-layout_mode = 2
-expand_icon = true
-script = ExtResource("3_h2yge")
+script = ExtResource("3_272bh")
+max_vertices = 3
+max_edges = 3
+ponderado = true
+default_weight = 5
 
 [node name="LLM" type="Node" parent="."]
 script = ExtResource("4_1bvp3")
