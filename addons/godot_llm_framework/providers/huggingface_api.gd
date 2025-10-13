@@ -25,7 +25,7 @@ func generate_response(params: Dictionary) -> Dictionary:
         }
     }
 
-    var response := await _make_request("https://router.huggingface.co/v1/chat/completions", headers, body)
+    var response = await _make_request("https://router.huggingface.co/v1/chat/completions", headers, body)
     
     if typeof(response) == TYPE_DICTIONARY and response.has("error"):
         var error_message := "Hugging Face API error: " + str(response.error)
@@ -33,7 +33,7 @@ func generate_response(params: Dictionary) -> Dictionary:
         return { "error": error_message }
 
     return response
-#
+
 #func _make_request(url: String, headers: Array, body: Dictionary) -> Dictionary:
     #var http := HTTPRequest.new()
     #add_child(http)
