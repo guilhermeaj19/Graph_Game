@@ -8,7 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_7mycd"]
 script = ExtResource("5_lquwl")
-model = "HuggingFaceTB/SmolLM3-3B"
+model = "gemini-flash-latest"
 metadata/_custom_type_script = "uid://cmhtv0cbbkpmb"
 
 [node name="Question" type="Control"]
@@ -89,10 +89,12 @@ max_vertices = 3
 max_edges = 3
 ponderado = true
 default_weight = 5
+graph_file_path = ""
 
 [node name="LLM" type="Node" parent="."]
 script = ExtResource("4_1bvp3")
 config = SubResource("Resource_7mycd")
+debug = true
 metadata/_custom_type_script = "uid://c3u5nmi5oxh5v"
 
 [connection signal="pressed" from="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva/ButtonSend" to="." method="_on_button_send_pressed"]

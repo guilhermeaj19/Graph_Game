@@ -12,9 +12,10 @@ class_name LLMProviderAPI
 ##
 ## This enum is used to identify different LLM providers that can be used with this API.
 enum Provider {
-	OPENAI,
-	ANTHROPIC,
-	HUGGINGFACE
+    OPENAI,
+    ANTHROPIC,
+    HUGGINGFACE,
+    GEMINI
 }
 
 ## The API key for authenticating with the LLM provider.
@@ -27,7 +28,7 @@ var debug: bool = false
 ##
 ## [param key] The API key to set.
 func set_api_key(key: String) -> void:
-	api_key = key
+    api_key = key
 
 ## Generates a response from the LLM using the given parameters.
 ##
@@ -37,8 +38,8 @@ func set_api_key(key: String) -> void:
 ## [param _params] A dictionary of parameters for the request, including the prompt.
 ## [return] A dictionary containing the generated response or error information.
 func generate_response(_params: Dictionary) -> Dictionary:
-	push_error("Method 'generate_response' must be overridden in derived class")
-	return {}
+    push_error("Method 'generate_response' must be overridden in derived class")
+    return {}
 
 ## Streams a response from the LLM using the given parameters.
 ##
@@ -47,7 +48,7 @@ func generate_response(_params: Dictionary) -> Dictionary:
 ##
 ## [param _params] A dictionary of parameters for the request, including the prompt.
 func stream_response(_params: Dictionary) -> void:
-	push_error("Method 'stream_response' must be overridden in derived class")
+    push_error("Method 'stream_response' must be overridden in derived class")
 
 ## Retrieves the list of available models from the LLM provider.
 ##
@@ -56,8 +57,8 @@ func stream_response(_params: Dictionary) -> void:
 ##
 ## [return] An array of available model names.
 func get_available_models() -> Array:
-	push_error("Method 'get_available_models' must be overridden in derived class")
-	return []
+    push_error("Method 'get_available_models' must be overridden in derived class")
+    return []
 
 ## Helper method for making HTTP requests.
 ##
@@ -65,8 +66,8 @@ func get_available_models() -> Array:
 ## [param headers] A dictionary of HTTP headers to include in the request.
 ## [param body] A dictionary representing the request body (will be converted to JSON).
 ## [return] A dictionary containing the parsed JSON response.
-func _make_request(url: String, headers: Dictionary, body: Dictionary) -> Dictionary:
-	return await _coroutine_request(url, headers, body)
+func _make_request(url: String, headers: Dictionary, body: Dictionary):
+    return await _coroutine_request(url, headers, body)
 
 ## Coroutine for making HTTP requests.
 ##
@@ -77,40 +78,40 @@ func _make_request(url: String, headers: Dictionary, body: Dictionary) -> Dictio
 ## [param headers] A dictionary of HTTP headers to include in the request.
 ## [param body] A dictionary representing the request body (will be converted to JSON).
 ## [return] A dictionary containing the parsed JSON response.
-func _coroutine_request(url: String, headers: Dictionary, body: Dictionary) -> Dictionary:
-	var http_request = HTTPRequest.new()
-	add_child(http_request)
-	
-	# Wait for the next frame to ensure the node is added to the scene tree
-	await get_tree().process_frame
-	
-	var header_array = PackedStringArray()
-	for key in headers:
-		header_array.append(key + ": " + headers[key])
-	
-	if debug: print("LLM: Request Data: ", JSON.stringify(headers, "\t") + "\n" + JSON.stringify(body, "\t"))
+func _coroutine_request(url: String, headers: Dictionary, body: Dictionary):
+    var http_request = HTTPRequest.new()
+    add_child(http_request)
+    
+    # Wait for the next frame to ensure the node is added to the scene tree
+    await get_tree().process_frame
+    
+    var header_array = PackedStringArray()
+    for key in headers:
+        header_array.append(key + ": " + headers[key])
+    
+    if debug: print("LLM: Request Data: ", JSON.stringify(headers, "\t") + "\n" + JSON.stringify(body, "\t"))
 
-	var error = http_request.request(url, header_array, HTTPClient.METHOD_POST, JSON.stringify(body))
-	if error != OK:
-		push_error("An error occurred in the HTTP request.")
-		remove_child(http_request)
-		http_request.queue_free()
-		return {}
+    var error = http_request.request(url, header_array, HTTPClient.METHOD_POST, JSON.stringify(body))
+    if error != OK:
+        push_error("An error occurred in the HTTP request.")
+        remove_child(http_request)
+        http_request.queue_free()
+        return {}
 
-	var response = await http_request.request_completed
-	remove_child(http_request)
-	http_request.queue_free()
+    var response = await http_request.request_completed
+    remove_child(http_request)
+    http_request.queue_free()
 
-	if response[0] != HTTPRequest.RESULT_SUCCESS:
-		push_error("Received HTTP response code: " + str(response[1]))
-		return {}
+    if response[0] != HTTPRequest.RESULT_SUCCESS:
+        push_error("Received HTTP response code: " + str(response[1]))
+        return {}
 
-	var json = JSON.parse_string(response[3].get_string_from_utf8())
-	if json == null:
-		push_error("Failed to parse JSON response")
-		return {}
+    var json = JSON.parse_string(response[3].get_string_from_utf8())
+    if json == null:
+        push_error("Failed to parse JSON response")
+        return {}
 
-	return json
+    return json
 
 ## Helper method for making streaming HTTP requests.
 ##
@@ -123,16 +124,16 @@ func _coroutine_request(url: String, headers: Dictionary, body: Dictionary) -> D
 # func _make_streaming_request(url: String, headers: Dictionary, body: Dictionary) -> void:
 # 	var http_request = HTTPRequest.new()
 # 	add_child(http_request)
-	
+    
 # 	# Wait for the next frame to ensure the node is added to the scene tree
 # 	await get_tree().process_frame
-	
+    
 # 	http_request.connect("request_completed", Callable(self, "_on_streaming_request_completed"))
-	
+    
 # 	var header_array = PackedStringArray()
 # 	for key in headers:
 # 		header_array.append(key + ": " + headers[key])
-	
+    
 # 	body["stream"] = true
 # 	var error = http_request.request(url, header_array, HTTPClient.METHOD_POST, JSON.stringify(body))
 # 	if error != OK:
@@ -178,14 +179,14 @@ func _coroutine_request(url: String, headers: Dictionary, body: Dictionary) -> D
 ##
 ## [return] An array of extracted response messages.
 func extract_response_messages(_response: Dictionary) -> Array:
-	push_error("Method 'extract_response_messages' must be overridden in derived class")
-	return []
+    push_error("Method 'extract_response_messages' must be overridden in derived class")
+    return []
 
 ## Checks if this API supports tool use.
 ##
 ## [return] [code]true[/code] if the API supports tool use, [code]false[/code] otherwise.
 func supports_tool_use() -> bool:
-	return false
+    return false
 
 ## Prepares the tools in the format expected by the specific provider for the API request.
 ##
@@ -195,8 +196,8 @@ func supports_tool_use() -> bool:
 ## [param _tools] An array of BaseTool objects to be prepared.
 ## [return] An array of prepared tool data in the format expected by the provider.
 func prepare_tools_for_request(_tools: Array[BaseTool]) -> Array:
-	push_error("Method 'prepare_tools_for_request' must be overridden in derived class")
-	return []
+    push_error("Method 'prepare_tools_for_request' must be overridden in derived class")
+    return []
 
 ## Checks if the response contains any tool calls.
 ##
@@ -206,8 +207,8 @@ func prepare_tools_for_request(_tools: Array[BaseTool]) -> Array:
 ## [param response] The response dictionary from the API.
 ## [return] [code]true[/code] if the response contains tool calls, [code]false[/code] otherwise.
 func has_tool_calls(_response: Dictionary) -> bool:
-	push_error("Method 'has_tool_calls' must be overridden in derived class")
-	return false
+    push_error("Method 'has_tool_calls' must be overridden in derived class")
+    return false
 
 ## Extracts tool calls from the API response.
 ##
@@ -217,8 +218,8 @@ func has_tool_calls(_response: Dictionary) -> bool:
 ## [param _response] The response dictionary from the API.
 ## [return] An array of extracted tool call dictionaries, each containing 'name', 'id', and 'input' keys.
 func extract_tool_calls(_response: Dictionary) -> Array:
-	push_error("Method 'extract_tool_calls' must be overridden in derived class")
-	return []
+    push_error("Method 'extract_tool_calls' must be overridden in derived class")
+    return []
 
 ## Formats the results of tool executions in the provider's expected format for inclusion in the next API request.
 ##
@@ -232,14 +233,14 @@ func extract_tool_calls(_response: Dictionary) -> Array:
 ## [return] An array of formatted tool result data in the provider's expected format.
 ## For error handling, check if result.output.is_error is True.
 func format_tool_results(_tool_results: Array) -> Array:
-	push_error("Method 'format_tool_results' must be overridden in derived class")
-	return []
+    push_error("Method 'format_tool_results' must be overridden in derived class")
+    return []
 
 ## Checks if this API supports system prompt.
 ##
 ## [return] [code]true[/code] if the API supports system prompt use, [code]false[/code] otherwise.
 func supports_system_prompt() -> bool:
-	return false
+    return false
 
 ## Sets the system prompt for the LLM provider.
 ##
@@ -248,7 +249,7 @@ func supports_system_prompt() -> bool:
 ##
 ## [param _prompt] The system prompt to set.
 func set_system_prompt(_prompt: String) -> void:
-	push_error("Method 'set_system_prompt' must be overridden in derived class")
+    push_error("Method 'set_system_prompt' must be overridden in derived class")
 
 ## Gets the current system prompt for the LLM provider.
 ##
@@ -257,5 +258,5 @@ func set_system_prompt(_prompt: String) -> void:
 ##
 ## [return] The current system prompt as a string.
 func get_system_prompt() -> String:
-	push_error("Method 'get_system_prompt' must be overridden in derived class")
-	return ""
+    push_error("Method 'get_system_prompt' must be overridden in derived class")
+    return ""

@@ -51,6 +51,9 @@ func _initialize_api():
         LLMProviderAPI.Provider.HUGGINGFACE:
             api = HuggingFaceAPI.new()
             if debug: print("LLM: HuggingFace initialized")
+        LLMProviderAPI.Provider.GEMINI:
+            api = GeminiAPI.new()
+            if debug: print("LLM: Gemini initialized")
     
     if api:
         if debug: api.debug = true

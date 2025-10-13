@@ -8,7 +8,7 @@ extends Resource
 class_name LLMConfig
 
 ## The LLM provider (e.g., "anthropic", "openai").
-@export var provider: LLMProviderAPI.Provider = LLMProviderAPI.Provider.HUGGINGFACE
+@export var provider: LLMProviderAPI.Provider = LLMProviderAPI.Provider.GEMINI
 
 ## The API key for authenticating with the LLM provider.
 var api_key: String = ""
@@ -16,7 +16,7 @@ var api_key: String = ""
 @export_file("*.cfg") var api_config_path: String = "res://config_api.cfg"
 
 ## The default model to use for LLM requests.
-@export var model: String = "mistralai/Mistral-7B-Instruct-v0.3"
+@export var model: String = "codechat-bison-001"
 
 ## The temperature setting for controlling randomness in LLM outputs.
 @export var temperature: float = 0.7
@@ -33,22 +33,22 @@ var api_key: String = ""
 ##
 ## [return] A dictionary representation of the LLMConfig instance.
 func to_dict() -> Dictionary:
-	return {
-		"provider": LLMProviderAPI.Provider.keys()[provider],
-		"api_key": api_key,
-		"model": model,
-		"temperature": temperature,
-		"max_message_history": max_message_history
-	}
-	
+    return {
+        "provider": LLMProviderAPI.Provider.keys()[provider],
+        "api_key": api_key,
+        "model": model,
+        "temperature": temperature,
+        "max_message_history": max_message_history
+    }
+    
 func load_api_key():
-	var config := ConfigFile.new()
-	var err := config.load(api_config_path)
-	if err == OK:
-		api_key = config.get_value("api", "key", "")
-		print("API Key carregada com sucesso.")
-	else:
-		print("Erro ao carregar API Key:", str(err))
+    var config := ConfigFile.new()
+    var err := config.load(api_config_path)
+    if err == OK:
+        api_key = config.get_value("api", "key", "")
+        print("API Key carregada com sucesso.")
+    else:
+        print("Erro ao carregar API Key:", str(err))
 
 ## Creates an LLMConfig instance from a dictionary.
 ##
@@ -57,10 +57,10 @@ func load_api_key():
 ## [param dict] A dictionary containing LLM configuration data.
 ## [return] A new LLMConfig instance populated with the data from the input dictionary.
 static func from_dict(dict: Dictionary) -> LLMConfig:
-	var config = LLMConfig.new()
-	config.provider = dict.get("provider", LLMProviderAPI.Provider.ANTHROPIC)
-	config.api_key = dict.get("api_key", "")
-	config.model = dict.get("model", "claude-3-haiku-20240307")
-	config.temperature = dict.get("temperature", 0.7)
-	config.max_message_history = dict.get("max_message_history", 20)
-	return config
+    var config = LLMConfig.new()
+    config.provider = dict.get("provider", LLMProviderAPI.Provider.ANTHROPIC)
+    config.api_key = dict.get("api_key", "")
+    config.model = dict.get("model", "claude-3-haiku-20240307")
+    config.temperature = dict.get("temperature", 0.7)
+    config.max_message_history = dict.get("max_message_history", 20)
+    return config

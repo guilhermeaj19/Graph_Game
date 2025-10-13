@@ -12,7 +12,7 @@ class_name Question
 
 func avaliar_resposta():
     var messages =  [
-        {"role": "system",
+        {"role": "user",
          "content": "Você é um avaliador de respostas sobre questões de teoria de grafos. Avalie clareza, correção conceitual e completude da resposta."
         },
         {"role": "user",
@@ -24,35 +24,45 @@ func avaliar_resposta():
         },
         {
          "role": "user",
-         "content": "Vértices: " + str(vertices) + "\n" + "Arestas: " + str(edges),
+         "content": "Vértices: " + str(vertices.map(func(x): return x.id)),
         },
-        {"role": "user", 
-         "content": "Avalie, em até 300 caracteres, essa resposta e atribua uma nota de 0 a 10, justificando a nota."
+        {
+         "role": "user",
+         "content": "Arestas: " + str(edges.map(func(e): return [e["from"].id, e["to"].id, e["weight"]])),
+        },
+        {
+         "role": "user", 
+         "content": "Avalie, em até 300 caracteres, em texto plano, essa resposta e atribua uma nota de 0 a 10, justificando a nota."
+        },
+        {
+         "role": "user", 
+         "content": "O formato da resposta deve ser: 'Nota: <Nota> \n 'Justificativa:'" 
         }
         ]
 
     var params := {
-        "model": "HuggingFaceTB/SmolLM3-3B:hf-inference",
-        "prompt": messages,
-        "max_tokens": 512,
+        "prompt_messages": messages,
     }
     var result = await llm.generate_response("", params)
-    print(result["choices"][0]["message"]["content"])
-    respostaIA.text = result["choices"][0]["message"]["content"]
+    #print(result["choices"][0]["message"]["content"])
+    respostaIA.text = ""
+    for part in result.content:
+        respostaIA.text += part.candidates[0].content.parts[0].text
+    print(result)
+    #respostaIA.text = result["choices"][0]["message"]["content"]
         
 
 func _ready() -> void:
     vertices = graph.vertices
     edges = graph.edges
     
-    var max_v = 3#randi_range(3,7)
+    var max_v = randi_range(3,7)
     graph.max_vertices = max_v
-    var max_possible_edges = max_v*(max_v-1)/2
+    var max_possible_edges = round(max_v*(max_v-1)/2)
     
-    graph.max_edges = 3#randi_range(graph.max_vertices,max_possible_edges)
-    enunciado.text =   ("CRIE UM GRAFO COM CICLO EULERIANO DE FORMA " +\
-                       "UTILIZANDO {0} VÉRTICES E {1} ARESTAS. NO "  +\
-                       "CAMPO ABAIXO, JUSTIFIQUE SUA RESPOSTA.").format([graph.max_vertices, graph.max_edges])
+    graph.max_edges = randi_range(graph.max_vertices,max_possible_edges)
+    enunciado.text =   ("Crie um grafo com ciclo euleriano utilizando {0} vértices e {1} arestas. " +\
+                       "No campo abaixo, justifique seu raciocínio.").format([graph.max_vertices, graph.max_edges])
     
     await get_tree().process_frame
     graph.load_graph_from_file(graph.graph_file_path)
@@ -64,12 +74,17 @@ func _on_button_send_pressed() -> void:
         var result = es_ciclo_euleriano()
         print("É Euleriano? ", "Sim" if result["ok"] else "Não")
         print("Ciclo: ", result["ciclo"].map(func(v): return v.id))
-        avaliar_resposta()
+        if result["ok"]:
+            avaliar_resposta()
+        else:
+            respostaIA.text = "O ciclo não é Euleriano. Revise as propriedades!"
     else:
-        print("O grafo deve ter {0} vértices (tem {1}) e {2} arestas (tem {3})!".format([graph.max_vertices, vertices.size(), graph.max_edges, edges.size()]))
+        respostaIA.text = "O grafo deve ter {0} vértices (tem {1}) e {2} arestas (tem {3})!".format([graph.max_vertices, vertices.size(), graph.max_edges, edges.size()])
 
 # Verifica se o grafo tem ciclo euleriano
 func es_ciclo_euleriano() -> Dictionary:
+    if vertices.size() == 0 or edges.size() == 0:
+        return {"ok": true, "ciclo": []}
     # known[i] = se a aresta edges[i] já foi usada
     var known: Array = []
     known.resize(edges.size())
