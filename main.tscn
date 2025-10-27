@@ -1,100 +1,63 @@
-[gd_scene load_steps=7 format=3 uid="uid://2ld3cbsgamqo"]
+[gd_scene load_steps=2 format=3 uid="uid://2ld3cbsgamqo"]
 
-[ext_resource type="Script" uid="uid://x7imlnhtc480" path="res://question_euleriano.gd" id="1_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://cnihu3ka5c5ul" path="res://scenes/GraphEditor.tscn" id="2_7mycd"]
-[ext_resource type="Script" uid="uid://qpnqp3mgn3m7" path="res://scripts/LimitedGraphEditor.gd" id="3_272bh"]
-[ext_resource type="Script" uid="uid://c3u5nmi5oxh5v" path="res://addons/godot_llm_framework/llm.gd" id="4_1bvp3"]
-[ext_resource type="Script" uid="uid://cmhtv0cbbkpmb" path="res://addons/godot_llm_framework/llm_config.gd" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://ex1liynxcp0c" path="res://main_hub.gd" id="1_ig7tw"]
 
-[sub_resource type="Resource" id="Resource_7mycd"]
-script = ExtResource("5_lquwl")
-model = "gemini-flash-latest"
-metadata/_custom_type_script = "uid://cmhtv0cbbkpmb"
-
-[node name="Question" type="Control"]
+[node name="MainHub" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_0xm2m")
-metadata/_custom_type_script = "uid://x7imlnhtc480"
+script = ExtResource("1_ig7tw")
+cell_size_param = Vector2(250, 250)
 
 [node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.178418, 0.517243, 0.512353, 1)
-
-[node name="SplitContainer" type="SplitContainer" parent="ColorRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 1.8
-
-[node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer/VSplitContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.16
-dragging_enabled = false
-
-[node name="Label" type="Label" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "CRIE UM GRAFO COM CICLO EULERIANO DE FORMA UTILIZANDO 3 VÉRTICES E 3 ARESTAS. NO CAMPO ABAIXO, JUSTIFIQUE SUA RESPOSTA."
-autowrap_mode = 3
-
-[node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
-z_index = 1
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-wrap_mode = 1
-
-[node name="ButtonSend" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva"]
 layout_mode = 0
-offset_left = 327.0
-offset_top = 164.0
-offset_right = 374.0
-offset_bottom = 195.0
-text = "Send"
+offset_right = 1159.0
+offset_bottom = 650.0
+color = Color(0.1764706, 0.5176471, 0.5137255, 1)
 
-[node name="RespostaIA" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer"]
-z_index = 1
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
+layout_mode = 0
+offset_right = 1145.0
+offset_bottom = 645.0
+alignment = 1
+
+[node name="lbl_title" type="Label" parent="ColorRect/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 16.1
+theme_override_font_sizes/font_size = 30
+text = "Questões"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.5
-wrap_mode = 1
+size_flags_stretch_ratio = 5.15
 
-[node name="GraphEditor" parent="ColorRect/SplitContainer" instance=ExtResource("2_7mycd")]
+[node name="grid_thumbs" type="GridContainer" parent="ColorRect/VBoxContainer/MarginContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="pagination_row" type="HBoxContainer" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+alignment = 1
+
+[node name="btn_prev" type="Button" parent="ColorRect/VBoxContainer/pagination_row"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.45
-script = ExtResource("3_272bh")
-max_vertices = 3
-max_edges = 3
-ponderado = true
-default_weight = 5
-graph_file_path = ""
 
-[node name="LLM" type="Node" parent="."]
-script = ExtResource("4_1bvp3")
-config = SubResource("Resource_7mycd")
-debug = true
-metadata/_custom_type_script = "uid://c3u5nmi5oxh5v"
+[node name="lbl_page" type="Label" parent="ColorRect/VBoxContainer/pagination_row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 9.4
 
-[connection signal="pressed" from="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva/ButtonSend" to="." method="_on_button_send_pressed"]
+[node name="btn_next" type="Button" parent="ColorRect/VBoxContainer/pagination_row"]
+layout_mode = 2
+size_flags_horizontal = 3

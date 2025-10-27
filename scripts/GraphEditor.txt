@@ -2,28 +2,14 @@
 extends Control
 class_name GraphEditor
 
-# Sinais públicos para integração com adapters e UIs externas
-signal edge_selected(edge_idx)            # emite índice da aresta clicada
-signal edge_clicked(edge_idx)             # sinônimo para cliques
-signal selection_changed(vertices, edges) # emite arrays de vértices e arestas selecionados
-signal graph_loaded()                     # emite quando um grafo é (re)carregado
-signal graph_saved(path)                  # emite quando grafo é salvo em disco
-signal weight_changed(edge_idx, new_w)
-
 @export var VertexScene: PackedScene
 @export var WeightDisplayScene: PackedScene
 
 enum State {
-    IDLE,
-    DRAG_VERTEX,
+    IDLE,          
+    DRAG_VERTEX,  
     CONNECT_EDGE,
     EDITING_WEIGHT
-}
-
-enum Mode {
-    ADD,
-    DELETE,
-    SELECT
 }
 
 enum TypeGraph {
@@ -34,17 +20,12 @@ enum TypeGraph {
 @export var graph_type: TypeGraph = TypeGraph.NAO_DIRIGIDO
 @export var ponderado: bool = false
 
-var mode: Mode = Mode.ADD
-
 var vertices: Array[Vertex] = []
 var edges:    Array  = []
 var current_state: State = State.IDLE
 var selected_vertex: Vertex = null
 var dragging_pan:    bool   = false
 var next_id_vertex:  int    = 0
-
-var highlight_layer: Node2D = null
-var selected_edge_indices: Array = Array()
 
 @onready var batch_edges: MultiMeshInstance2D = $EdgesBatch
 @onready var batch_arrows:  MultiMeshInstance2D = $ArrowsBatch
@@ -53,7 +34,7 @@ var selected_edge_indices: Array = Array()
 @export var edge_color:     Color  = Color.WHITE
 @export var guide_line:     Color  = Color.GREEN
 
-@onready var mode_option: OptionButton = $MarginContainer/ModeOption
+@onready var toggle_button: CheckButton = $MarginContainer/CheckButton
 
 @onready var weights_container: Node2D = $WeightsContainer
 @onready var weight_editor: LineEdit = $WeightEditor
@@ -77,9 +58,108 @@ var editing_edge_idx: int = -1
         if value:
             call_deferred("clear_graph")
 
-# -------------------- Inicialização --------------------
+func clear_graph():
+    for child in weights_container.get_children():
+        child.queue_free()
+        
+    for v in vertices:
+        v.queue_free()
+    vertices.clear()
+    edges.clear()
+    
+    next_id_vertex = 0
+    queue_redraw()
+
+func load_graph_from_file(filepath: String) -> void:
+    if not FileAccess.file_exists(filepath):
+        push_error("Arquivo de grafo não encontrado: " + filepath)
+        return
+
+    var file = FileAccess.open(filepath, FileAccess.READ)
+    var content = file.get_as_text()
+    file.close()
+    
+    var data = JSON.parse_string(content)
+    if typeof(data) != TYPE_DICTIONARY:
+        push_error("Arquivo JSON inválido ou corrompido.")
+        return
+
+    clear_graph()
+    var container_size = get_size()
+    var meta = data.get("meta", {})
+    var type_str = meta.get("graph_type", "NAO_DIRIGIDO")
+    
+    self.graph_type = TypeGraph.DIRIGIDO if type_str == "DIRIGIDO" else TypeGraph.NAO_DIRIGIDO
+    
+    ponderado = meta.get("ponderado", false)
+    
+    var id_to_vertex_map = {}
+    var loaded_vertices = data.get("vertices", [])
+    for v_data in loaded_vertices:
+        var normalized_pos = Vector2(v_data["pos_x"], v_data["pos_y"])
+        var local_pos = normalized_pos * container_size
+        var global_pos = local_pos + get_global_position()
+        var new_v = add_vertex(global_pos)
+        new_v.set_id(v_data["id"]) 
+        id_to_vertex_map[v_data["id"]] = new_v
+
+    var loaded_edges = data.get("edges", [])
+    for e_data in loaded_edges:
+        var from_v = id_to_vertex_map.get(e_data["from_id"])
+        var to_v = id_to_vertex_map.get(e_data["to_id"])
+        
+        if from_v and to_v:
+            add_edge(from_v, to_v)
+            var added_edge = edges.back()
+            added_edge["weight"] = int(e_data["weight"])
+
+    next_id_vertex = meta.get("next_id_vertex", 0)
+    print("Grafo carregado com sucesso de: ", filepath)
+    queue_redraw()
+    
+func save_graph_to_file(filepath: String) -> void:
+    if filepath.is_empty():
+        push_error("Caminho do arquivo para salvar está vazio.")
+        return
+        
+    var container_size = get_size()
+    var graph_data = {
+        "meta": {
+            "graph_type": "DIRIGIDO" if graph_type == TypeGraph.DIRIGIDO else "NAO_DIRIGIDO",
+            "ponderado": ponderado,
+            "next_id_vertex": next_id_vertex
+        },
+        "vertices": [],
+        "edges": []
+    }
+
+    for v in vertices:
+        var local_pos = v.global_position - get_global_position()
+        
+        var normalized_pos_x = local_pos.x / container_size.x
+        var normalized_pos_y = local_pos.y / container_size.y
+        
+        graph_data["vertices"].append({
+            "id": v.id,
+            "pos_x": normalized_pos_x,
+            "pos_y": normalized_pos_y
+        })
+
+    for e in edges:
+        graph_data["edges"].append({"from_id": e["from"].id,"to_id": e["to"].id,"weight": e["weight"]})
+
+    var json_string = JSON.stringify(graph_data, "  ")
+    var file = FileAccess.open(filepath, FileAccess.WRITE)
+    if not FileAccess.get_open_error() == OK:
+        push_error("Falha ao abrir o arquivo para escrita: " + filepath)
+        return
+        
+    file.store_string(json_string)
+    file.close()
+    print("Grafo salvo com sucesso em: ", filepath)
 
 func _ready() -> void:
+
     weight_editor.visible = false
     weight_editor.size = Vector2(50, 24)
 
@@ -111,21 +191,6 @@ func _ready() -> void:
         batch_arrows.multimesh   = arr_mm
         batch_arrows.modulate    = edge_color
         batch_arrows.z_index     = 1
-
-    highlight_layer = Node2D.new()
-    highlight_layer.name = "_HighlightLayer"
-    add_child(highlight_layer)
-    highlight_layer.z_index = 100
-    
-    if mode_option.get_item_count() == 0:
-        mode_option.add_item("Add/Edit", Mode.ADD)
-        mode_option.add_item("Delete", Mode.DELETE)
-        #mode_option.add_item("Select", Mode.SELECT)
-        
-    mode_option.select(mode)
-    mode_option.connect("item_selected", Callable(self, "_on_mode_changed"))
-
-# -------------------- Renderização --------------------
 
 func _draw_grafo_nao_dirigido() -> void:
     var mm  = batch_edges.multimesh
@@ -170,10 +235,11 @@ func _draw_grafo_dirigido() -> void:
 
         var t_arrow  = Transform2D.IDENTITY.scaled(Vector2(edge_thickness * 4, edge_thickness * 4)).rotated(seg["angle"]).translated(seg["tip"])
         ma.set_instance_transform_2d(i, t_arrow)
-
+        
         if ponderado:
             var weight_display = weights_container.get_child(i) as Control
             var e = edges[i]
+            
             if weight_display and editing_edge_idx != i:
                 weight_display.global_position = gt * mid_pt
                 weight_display.update_text_and_resize(str(e["weight"]))
@@ -190,16 +256,14 @@ func _draw() -> void:
     else:
         _draw_grafo_dirigido()
 
-# -------------------- Input / Estados --------------------
-
 func _input(event: InputEvent) -> void:
     var mouse_position = get_local_mouse_position()
     var graph_rect = Rect2(Vector2.ZERO, get_size())
-
+    
     if not graph_rect.has_point(mouse_position):
         return
-
-    if event is InputEventMouseButton and mode_option.get_global_rect().has_point(event.position):
+        
+    if event is InputEventMouseButton and toggle_button.get_global_rect().has_point(event.position):
         return
 
     _unhandled_input(event)
@@ -235,27 +299,26 @@ func _state_idle_input(event) -> void:
     if event is InputEventMouseButton and event.pressed:
         var hit_vertex = _pick_vertex_at(event.position)
         var hit_edge   = _pick_edge_at(event.position)
+        print(hit_edge)
         match event.button_index:
             MOUSE_BUTTON_MASK_LEFT:
-                if mode == Mode.ADD:
+                if toggle_button.text == 'Add':   
                     if hit_vertex:
                         selected_vertex = hit_vertex
                         selected_vertex.drag()
                         current_state = State.DRAG_VERTEX
-                    elif hit_edge >= 0 and ponderado:
-                        current_state = State.EDITING_WEIGHT
-                        _start_editing_weight(hit_edge)
+                    elif _pick_edge_at(event.position) >= 0:
+                        if ponderado:
+                            current_state = State.EDITING_WEIGHT
+                            _start_editing_weight(_pick_edge_at(event.position))
                     else:
                         add_vertex(event.position)
-                elif mode == Mode.DELETE:
+                else:
                     if hit_vertex:
                         remove_vertex(hit_vertex)
                     elif hit_edge >= 0:
-                        _remove_edge_by_index(hit_edge)
-                else: # Mode.SELECT
-                    if hit_edge >= 0:
-                        _toggle_select_edge(hit_edge)
-                        emit_signal("edge_clicked", hit_edge)
+                        edges.remove_at(hit_edge)
+                        weights_container.get_child(hit_edge).queue_free()
             MOUSE_BUTTON_MASK_RIGHT:
                 if hit_vertex:
                     selected_vertex = hit_vertex
@@ -289,8 +352,6 @@ func _state_connect_input(event: InputEvent) -> void:
 
         queue_redraw()
 
-# -------------------- Eventos de clique em vértice --------------------
-
 func _on_vertex_clicked(v: Vertex) -> void:
     if not selected_vertex:
         selected_vertex = v
@@ -301,19 +362,6 @@ func _on_vertex_clicked(v: Vertex) -> void:
             queue_redraw()
         selected_vertex.idle()
         selected_vertex = null
-
-# -------------------- CRUD vértices/arestas --------------------
-func clear_graph():
-    for child in weights_container.get_children():
-        child.queue_free()
-        
-    for v in vertices:
-        v.queue_free()
-    vertices.clear()
-    edges.clear()
-    
-    next_id_vertex = 0
-    queue_redraw()
 
 func add_vertex(pos: Vector2) -> Vertex:
     var v = VertexScene.instantiate() as Vertex
@@ -334,10 +382,9 @@ func remove_vertex(v: Vertex) -> void:
             remaining_edges.append(e)
         else:
             removed_indices.append(i)
-
+    
     for i in range(removed_indices.size(),):
-        if weights_container.get_child_count() > i:
-            weights_container.get_child(i).queue_free()
+        weights_container.get_child(i).queue_free()
 
     edges = remaining_edges
     vertices.erase(v)
@@ -345,9 +392,9 @@ func remove_vertex(v: Vertex) -> void:
 
 func add_edge(origin: Vertex, destiny: Vertex) -> void:
     if not _edge_exists(origin, destiny):
-        var new_edge = { "from": origin, "to": destiny, "weight": default_weight }
+        var new_edge = { "from": origin, "to": destiny, "weight": default_weight } 
         edges.append(new_edge)
-
+        
         if ponderado:
             var weight_display = WeightDisplayScene.instantiate() as WeightDisplay
             weights_container.add_child(weight_display)
@@ -355,12 +402,6 @@ func add_edge(origin: Vertex, destiny: Vertex) -> void:
     else:
         print("The edge {0}--{1} already exists".format([origin.id, destiny.id]))
     print("Edges:", edges.map(func(e): return [e["from"].id, e["to"].id, e["weight"]] ))
-
-func _remove_edge_by_index(idx: int) -> void:
-    if idx >= 0 and idx < edges.size():
-        edges.remove_at(idx)
-        if weights_container.get_child_count() > idx:
-            weights_container.get_child(idx).queue_free()
 
 func _edge_exists(origin: Vertex, destiny: Vertex) -> bool:
     if graph_type == TypeGraph.NAO_DIRIGIDO:
@@ -373,14 +414,6 @@ func _edge_exists(origin: Vertex, destiny: Vertex) -> bool:
             if e['from'] == origin and e['to'] == destiny:
                 return true
         return false
-
-func _on_mode_changed(index:int) -> void:
-    # index corresponde às constantes do enum Mode registradas no add_item
-    mode = index as Mode
-    
-    if mode != Mode.SELECT:
-        clear_highlights()
-# -------------------- Picking --------------------
 
 func _pick_vertex_at(pos: Vector2) -> Vertex:
     for v in vertices:
@@ -399,7 +432,7 @@ func _pick_edge_at(click_pos: Vector2) -> int:
     if graph_type == TypeGraph.NAO_DIRIGIDO:
         return _pick_edge_nao_dirigido_at(click_pos)
     else:
-        return _pick_edge_dirigido_at(click_pos)
+        return _pick_edge_dirigido_at(click_pos) 
 
 func _get_edge_segment(e: Dictionary) -> Dictionary:
     var gt   = get_global_transform_with_canvas()
@@ -479,20 +512,17 @@ func _pick_edge_dirigido_at(click_pos: Vector2) -> int:
             best_idx  = i
     return best_idx
 
-# -------------------- Edição peso --------------------
-
-func _start_editing_weight(edge_idx: int) -> bool:
+func _start_editing_weight(edge_idx: int) -> bool:        
     editing_edge_idx = edge_idx
     var edge = edges[edge_idx]
     var label = weights_container.get_child(edge_idx) as WeightDisplay
-
-    if label:
-        label.visible = false
-
-    weight_editor.global_position = label.global_position if label else Vector2.ZERO
+    
+    label.visible = false
+    
+    weight_editor.global_position = label.global_position
     weight_editor.text = str(edge["weight"])
     weight_editor.visible = true
-
+    
     weight_editor.grab_focus()
     weight_editor.select_all()
     return true
@@ -502,206 +532,15 @@ func _on_weight_edit_finished(edge_idx: int) -> bool:
 
     if new_text.is_valid_float():
         edges[edge_idx]["weight"] = int(new_text)
-        emit_signal("weight_changed", edge_idx, int(new_text))
     else:
         print("INPUT INVALID")
         return false
-
+    
     weight_editor.visible = false
-
+    
     var label = weights_container.get_child(edge_idx) as WeightDisplay
     if label:
         label.visible = true
-
+        
     editing_edge_idx = -1
     return true
-
-# -------------------- Export / Import JSON públicos --------------------
-
-func build_from_json(data: Dictionary) -> void:
-    clear_graph()
-    var container_size = get_size()
-    var meta = data.get("meta", {})
-    var type_str = meta.get("graph_type", "NAO_DIRIGIDO")
-
-    self.graph_type = TypeGraph.DIRIGIDO if type_str == "DIRIGIDO" else TypeGraph.NAO_DIRIGIDO
-    ponderado = meta.get("ponderado", false)
-
-    var id_to_vertex_map = {}
-    var loaded_vertices = data.get("vertices", [])
-    for v_data in loaded_vertices:
-        var normalized_pos = Vector2(v_data.get("pos_x", 0.5), v_data.get("pos_y", 0.5))
-        var local_pos = normalized_pos * container_size
-        var global_pos = local_pos + get_global_position()
-        var new_v = add_vertex(global_pos)
-        new_v.set_id(int(v_data.get("id", 0)))
-        id_to_vertex_map[v_data.get("id")] = new_v
-
-    var loaded_edges = data.get("edges", [])
-    for e_data in loaded_edges:
-        var from_v = id_to_vertex_map.get(e_data.get("from_id"))
-        var to_v = id_to_vertex_map.get(e_data.get("to_id"))
-
-        if from_v and to_v:
-            add_edge(from_v, to_v)
-            var added_edge = edges.back()
-            added_edge["weight"] = int(e_data.get("weight", default_weight))
-
-    next_id_vertex = int(meta.get("next_id_vertex", next_id_vertex))
-    queue_redraw()
-    emit_signal("graph_loaded")
-
-func export_graph_json() -> Dictionary:
-    var container_size = get_size()
-    var graph_data = {
-        "meta": {
-            "graph_type": "DIRIGIDO" if graph_type == TypeGraph.DIRIGIDO else "NAO_DIRIGIDO",
-            "ponderado": ponderado,
-            "next_id_vertex": next_id_vertex
-        },
-        "vertices": [],
-        "edges": []
-    }
-    for v in vertices:
-        var local_pos = v.global_position - get_global_position()
-        var normalized_pos_x = local_pos.x / container_size.x if container_size.x != 0 else 0.0
-        var normalized_pos_y = local_pos.y / container_size.y if container_size.y != 0 else 0.0
-        graph_data["vertices"].append({"id": v.id, "pos_x": normalized_pos_x, "pos_y": normalized_pos_y})
-    for e in edges:
-        graph_data["edges"].append({"from_id": e["from"].id, "to_id": e["to"].id, "weight": e.get("weight", default_weight)})
-    return graph_data
-
-# -------------------- Lookups e utilitários públicos --------------------
-
-func find_edge(u_id, v_id) -> int:
-    for i in range(edges.size()):
-        var e = edges[i]
-        if e["from"].id == u_id and e["to"].id == v_id:
-            return i
-        if graph_type == TypeGraph.NAO_DIRIGIDO and e["from"].id == v_id and e["to"].id == u_id:
-            return i
-    return -1
-
-func edge_to_ends(edge_idx: int) -> Dictionary:
-    if edge_idx >= 0 and edge_idx < edges.size():
-        var e = edges[edge_idx]
-        return {"u": e["from"].id, "v": e["to"].id}
-    return {}
-
-func get_public_vertices():
-    return vertices
-
-func get_public_edges():
-    return edges
-
-func enable_editing(enabled: bool) -> void:
-    # controla modo via enum; enabled true -> permite adição e remoção
-    mode = Mode.ADD if enabled else Mode.SELECT
-    if mode_option:
-        mode_option.select(int(mode))
-
-func set_creation_enabled(enabled: bool) -> void:
-    enable_editing(enabled)
-
-func clear_selection() -> void:
-    selected_edge_indices = Array()
-    # limpa seleção visual de vértices também
-    if selected_vertex:
-        selected_vertex.idle()
-        selected_vertex = null
-    _update_highlight_visuals()
-    emit_signal("selection_changed", [], [])
-
-func clear_highlights() -> void:
-    selected_edge_indices = Array()
-    _update_highlight_visuals()
-
-# -------------------- Seleção multi-aresta e highlights overlay --------------------
-
-func _toggle_select_edge(idx: int) -> void:
-    if idx < 0:
-        return
-    var arr = selected_edge_indices
-    var found = false
-    for i in range(arr.size()):
-        if arr[i] == idx:
-            arr.remove(i)
-            found = true
-            break
-    if not found:
-        arr.append(idx)
-    selected_edge_indices = arr
-    _update_highlight_visuals()
-    # constrói arrays de vértices e arestas selecionadas para o sinal
-    var sel_edges = []
-    var sel_vertices = []
-    for i in range(selected_edge_indices.size()):
-        var e = edges[selected_edge_indices[i]]
-        sel_edges.append(selected_edge_indices[i])
-        sel_vertices.append(e["from"].id)
-        sel_vertices.append(e["to"].id)
-    emit_signal("selection_changed", sel_vertices, sel_edges)
-
-func _update_highlight_visuals() -> void:
-    # remove filhos antigos
-    for c in highlight_layer.get_children():
-        c.queue_free()
-
-    for i in range(selected_edge_indices.size()):
-        var idx = selected_edge_indices[i]
-        if idx < 0 or idx >= edges.size():
-            continue
-        var e = edges[idx]
-        var line = Line2D.new()
-        line.width = max(edge_thickness * 1.6, 2.0)
-        line.gradient = null
-        line.default_color = Color(0.952, 0.349, 0.372, 0.9) # vermelho por padrão para seleção
-        var gt = get_global_transform_with_canvas()
-        var inv = gt.affine_inverse()
-        var a = inv * e["from"].global_position
-        var b = inv * e["to"].global_position
-        line.points = [a, b]
-        highlight_layer.add_child(line)
-
-# -------------------- Utils e helpers --------------------
-
-func _noop(): pass
-
-func _remove_all_weights_children():
-    for c in weights_container.get_children():
-        c.queue_free()
-
-# -------------------- Salvamento / Carregamento --------------------
-
-func load_graph_from_file(filepath: String) -> void:
-    if not FileAccess.file_exists(filepath):
-        push_error("Arquivo de grafo não encontrado: " + filepath)
-        return
-
-    var file = FileAccess.open(filepath, FileAccess.READ)
-    var content = file.get_as_text()
-    file.close()
-
-    var data = JSON.parse_string(content)
-    if typeof(data) != TYPE_DICTIONARY:
-        push_error("Arquivo JSON inválido ou corrompido.")
-        return
-
-    build_from_json(data)
-    emit_signal("graph_loaded")
-
-func save_graph_to_file(filepath: String) -> void:
-    if filepath.is_empty():
-        push_error("Caminho do arquivo para salvar está vazio.")
-        return
-
-    var json_string = JSON.stringify(export_graph_json(), "  ")
-    var file = FileAccess.open(filepath, FileAccess.WRITE)
-    if not FileAccess.get_open_error() == OK:
-        push_error("Falha ao abrir o arquivo para escrita: " + filepath)
-        return
-
-    file.store_string(json_string)
-    file.close()
-    emit_signal("graph_saved", filepath)
-    print("Grafo salvo com sucesso em: ", filepath)
