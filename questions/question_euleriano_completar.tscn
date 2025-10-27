@@ -1,0 +1,110 @@
+[gd_scene load_steps=7 format=3 uid="uid://bh01wkqdexp3o"]
+
+[ext_resource type="Script" uid="uid://bgfr7jx2cxn6f" path="res://questions/question_euleriano_completar.gd" id="1_svji3"]
+[ext_resource type="PackedScene" uid="uid://cnihu3ka5c5ul" path="res://scenes/GraphEditor.tscn" id="2_vtscm"]
+[ext_resource type="Script" uid="uid://ciddb7hxmqbxu" path="res://scripts/PartialStaticGraphEditor.gd" id="3_svji3"]
+[ext_resource type="Script" uid="uid://c3u5nmi5oxh5v" path="res://addons/godot_llm_framework/llm.gd" id="4_3l0an"]
+[ext_resource type="Script" uid="uid://cmhtv0cbbkpmb" path="res://addons/godot_llm_framework/llm_config.gd" id="5_mgu44"]
+
+[sub_resource type="Resource" id="Resource_7mycd"]
+script = ExtResource("5_mgu44")
+model = "gemini-flash-latest"
+metadata/_custom_type_script = "uid://cmhtv0cbbkpmb"
+
+[node name="Question" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_svji3")
+metadata/_custom_type_script = "uid://x7imlnhtc480"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.178418, 0.517243, 0.512353, 1)
+
+[node name="SplitContainer" type="SplitContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.16
+dragging_enabled = false
+
+[node name="Label" type="Label" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+autowrap_mode = 3
+
+[node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+wrap_mode = 1
+
+[node name="ButtonSend" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva"]
+layout_mode = 0
+offset_left = 327.0
+offset_top = 164.0
+offset_right = 374.0
+offset_bottom = 195.0
+text = "Send"
+
+[node name="RespostaIA" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.5
+placeholder_text = "Feedback..."
+editable = false
+wrap_mode = 1
+
+[node name="ButtonReturnToMenu" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/RespostaIA"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 299.0
+offset_right = 140.0
+offset_bottom = 330.0
+text = "Return to Menu"
+
+[node name="GraphEditor" parent="ColorRect/SplitContainer" instance=ExtResource("2_vtscm")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.45
+script = ExtResource("3_svji3")
+max_new_vertices = 4
+max_new_edges = 4
+new_vertices_list = []
+new_edges_list = []
+graph_file_path = ""
+
+[node name="LLM" type="Node" parent="."]
+script = ExtResource("4_3l0an")
+config = SubResource("Resource_7mycd")
+debug = true
+metadata/_custom_type_script = "uid://c3u5nmi5oxh5v"
+
+[connection signal="pressed" from="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva/ButtonSend" to="." method="_on_button_send_pressed"]
+[connection signal="pressed" from="ColorRect/SplitContainer/VSplitContainer/RespostaIA/ButtonReturnToMenu" to="." method="_on_button_return_to_menu_pressed"]

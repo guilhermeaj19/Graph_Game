@@ -32,7 +32,7 @@ grow_vertical = 2
 script = ExtResource("1_lupl7")
 VertexScene = ExtResource("2_t7pmw")
 WeightDisplayScene = ExtResource("3_354rq")
-graph_file_path = "res://graphs/incomplete_graph.json"
+graph_file_path = "res://graphs/eulerian_incomplete_graph.json"
 metadata/_custom_type_script = "uid://d23da056etjjn"
 
 [node name="EdgesBatch" type="MultiMeshInstance2D" parent="."]

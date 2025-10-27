@@ -351,7 +351,7 @@ func remove_vertex(v: Vertex) -> void:
     vertices.erase(v)
     v.queue_free()
 
-func add_edge(origin: Vertex, destiny: Vertex) -> void:
+func add_edge(origin: Vertex, destiny: Vertex) -> Dictionary:
     if not _edge_exists(origin, destiny):
         var new_edge = { "from": origin, "to": destiny, "weight": default_weight }
         edges.append(new_edge)
@@ -360,8 +360,11 @@ func add_edge(origin: Vertex, destiny: Vertex) -> void:
             var weight_display = WeightDisplayScene.instantiate() as WeightDisplay
             weights_container.add_child(weight_display)
             weight_display.update_text_and_resize(str(new_edge["weight"]))
+        return new_edge
     else:
-        pass#print("The edge {0}--{1} already exists".format([origin.id, destiny.id]))
+        pass
+        return {}
+        #print("The edge {0}--{1} already exists".format([origin.id, destiny.id]))
     #print("Edges:", edges.map(func(e): return [e["from"].id, e["to"].id, e["weight"]] ))
 
 func _remove_edge_by_index(idx: int) -> void:
