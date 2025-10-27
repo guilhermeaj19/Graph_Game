@@ -330,7 +330,7 @@ func add_vertex(pos: Vector2) -> Vertex:
     v.global_position = pos
     vertices.append(v)
     next_id_vertex += 1
-    print("Vertices:", vertices.map(func(x): return x.id))
+    #print("Vertices:", vertices.map(func(x): return x.id))
     return v
 
 func remove_vertex(v: Vertex) -> void:
@@ -361,8 +361,8 @@ func add_edge(origin: Vertex, destiny: Vertex) -> void:
             weights_container.add_child(weight_display)
             weight_display.update_text_and_resize(str(new_edge["weight"]))
     else:
-        print("The edge {0}--{1} already exists".format([origin.id, destiny.id]))
-    print("Edges:", edges.map(func(e): return [e["from"].id, e["to"].id, e["weight"]] ))
+        pass#print("The edge {0}--{1} already exists".format([origin.id, destiny.id]))
+    #print("Edges:", edges.map(func(e): return [e["from"].id, e["to"].id, e["weight"]] ))
 
 func _remove_edge_by_index(idx: int) -> void:
     if idx >= 0 and idx < edges.size():
@@ -383,9 +383,7 @@ func _edge_exists(origin: Vertex, destiny: Vertex) -> bool:
         return false
 
 func _on_mode_changed(index:int) -> void:
-    # index corresponde às constantes do enum Mode registradas no add_item
     mode = index as Mode
-    print(mode)
     
     if mode != Mode.SELECT:
         clear_highlights()
@@ -604,8 +602,7 @@ func get_public_edges():
     return edges
 
 func enable_editing(enabled: bool) -> void:
-    # controla modo via enum; enabled true -> permite adição e remoção
-    mode = Mode.ADD if enabled else Mode.SELECT
+    mode = Mode.ADD if enabled else Mode.STATIC
     if mode_option:
         mode_option.select(int(mode))
 

@@ -9,7 +9,6 @@ const ITEMS_PER_PAGE: int = COLUMNS * ROWS
 @export var grid_spacing_v: int = 8
 @export var cell_size_param: Vector2 = Vector2(260, 160)
 
-
 @onready var lbl_title: Label = $ColorRect/VBoxContainer/lbl_title
 @onready var grid_thumbs: GridContainer = $ColorRect/VBoxContainer/MarginContainer/grid_thumbs
 @onready var btn_prev: Button = $ColorRect/VBoxContainer/pagination_row/btn_prev
@@ -189,7 +188,7 @@ func set_cell_size(new_size: Vector2) -> void:
     _refresh_page()
 
 func _on_thumb_pressed(index: int) -> void:
-    print(index)
+    #print(index)
     _load_question_scene(questions_list[index]["path"])
 
 func _load_question_scene(scene_path: String) -> void:
