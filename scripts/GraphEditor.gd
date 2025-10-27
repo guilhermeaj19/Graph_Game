@@ -23,7 +23,8 @@ enum State {
 enum Mode {
     ADD,
     DELETE,
-    SELECT
+    SELECT,
+    STATIC
 }
 
 enum TypeGraph {
@@ -33,6 +34,7 @@ enum TypeGraph {
 
 @export var graph_type: TypeGraph = TypeGraph.NAO_DIRIGIDO
 @export var ponderado: bool = false
+@export var editavel: bool = true
 
 var mode: Mode = Mode.ADD
 
@@ -117,13 +119,17 @@ func _ready() -> void:
     add_child(highlight_layer)
     highlight_layer.z_index = 100
     
-    if mode_option.get_item_count() == 0:
-        mode_option.add_item("Add/Edit", Mode.ADD)
-        mode_option.add_item("Delete", Mode.DELETE)
-        #mode_option.add_item("Select", Mode.SELECT)
+    if editavel:
+        if mode_option.get_item_count() == 0:
+            mode_option.add_item("Add/Edit", Mode.ADD)
+            mode_option.add_item("Delete", Mode.DELETE)
+            mode_option.select(mode)
+    else:
+        mode = Mode.STATIC
+        mode_option.visible = false
         
-    mode_option.select(mode)
     mode_option.connect("item_selected", Callable(self, "_on_mode_changed"))
+    
 
 # -------------------- Renderização --------------------
 
@@ -252,10 +258,12 @@ func _state_idle_input(event) -> void:
                         remove_vertex(hit_vertex)
                     elif hit_edge >= 0:
                         _remove_edge_by_index(hit_edge)
-                else: # Mode.SELECT
+                elif mode == Mode.SELECT:
                     if hit_edge >= 0:
                         _toggle_select_edge(hit_edge)
                         emit_signal("edge_clicked", hit_edge)
+                else:
+                    return
             MOUSE_BUTTON_MASK_RIGHT:
                 if hit_vertex:
                     selected_vertex = hit_vertex
@@ -377,6 +385,7 @@ func _edge_exists(origin: Vertex, destiny: Vertex) -> bool:
 func _on_mode_changed(index:int) -> void:
     # index corresponde às constantes do enum Mode registradas no add_item
     mode = index as Mode
+    print(mode)
     
     if mode != Mode.SELECT:
         clear_highlights()

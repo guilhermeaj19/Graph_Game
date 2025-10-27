@@ -1,0 +1,86 @@
+{
+  "edges": [
+    {
+      "from_id": 4,
+      "to_id": 1,
+      "weight": 1
+    },
+    {
+      "from_id": 1,
+      "to_id": 0,
+      "weight": 1
+    },
+    {
+      "from_id": 0,
+      "to_id": 3,
+      "weight": 1
+    },
+    {
+      "from_id": 3,
+      "to_id": 2,
+      "weight": 1
+    },
+    {
+      "from_id": 2,
+      "to_id": 4,
+      "weight": 1
+    },
+    {
+      "from_id": 4,
+      "to_id": 0,
+      "weight": 1
+    },
+    {
+      "from_id": 1,
+      "to_id": 3,
+      "weight": 1
+    },
+    {
+      "from_id": 3,
+      "to_id": 4,
+      "weight": 1
+    },
+    {
+      "from_id": 2,
+      "to_id": 1,
+      "weight": 1
+    },
+    {
+      "from_id": 0,
+      "to_id": 2,
+      "weight": 1
+    }
+  ],
+  "meta": {
+    "graph_type": "NAO_DIRIGIDO",
+    "next_id_vertex": 5,
+    "ponderado": false
+  },
+  "vertices": [
+    {
+      "id": 0,
+      "pos_x": 0.228298611111111,
+      "pos_y": 0.442901234567901
+    },
+    {
+      "id": 1,
+      "pos_x": 0.201388888888889,
+      "pos_y": 0.805555555555556
+    },
+    {
+      "id": 2,
+      "pos_x": 0.765625,
+      "pos_y": 0.452160493827161
+    },
+    {
+      "id": 3,
+      "pos_x": 0.495659722222222,
+      "pos_y": 0.112654320987654
+    },
+    {
+      "id": 4,
+      "pos_x": 0.782118055555556,
+      "pos_y": 0.811728395061728
+    }
+  ]
+}

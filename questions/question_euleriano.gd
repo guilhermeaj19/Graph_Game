@@ -1,6 +1,5 @@
 @tool
 extends Control
-class_name Question
 
 @onready var graph     : GraphEditor   = $ColorRect/SplitContainer/GraphEditor
 @onready var enunciado : Label         = $ColorRect/SplitContainer/VSplitContainer/VSplitContainer/Label
@@ -12,6 +11,19 @@ class_name Question
 @onready var llm    : LLM = $LLM
 
 func avaliar_resposta():
+    if vertices.size() == graph.max_vertices and edges.size() == graph.max_edges: 
+        var result = es_ciclo_euleriano()
+        print("É Euleriano? ", "Sim" if result["ok"] else "Não")
+        print("Ciclo: ", result["ciclo"].map(func(v): return v.id))
+        if result["ok"]:
+            respostaIA.text = "Grafo correto! Avaliando justificativa..."
+        else:
+            respostaIA.text = "O ciclo não é Euleriano. Revise as propriedades!"
+            return
+    else:
+        respostaIA.text = "O grafo deve ter {0} vértices (tem {1}) e {2} arestas (tem {3})!".format([graph.max_vertices, vertices.size(), graph.max_edges, edges.size()])
+        return
+    
     var result = await llm.generate_response("", construct_prompt())
 
     respostaIA.text = ""
@@ -69,22 +81,9 @@ func _ready() -> void:
                        "No campo abaixo, justifique seu raciocínio.").format([graph.max_vertices, graph.max_edges])
     
     await get_tree().process_frame
-    graph.load_graph_from_file(graph.graph_file_path)
 
 func _on_button_send_pressed() -> void:
-    if vertices.size() == graph.max_vertices and edges.size() == graph.max_edges: 
-        #print(vertices)
-        #print(edges)
-        var result = es_ciclo_euleriano()
-        print("É Euleriano? ", "Sim" if result["ok"] else "Não")
-        print("Ciclo: ", result["ciclo"].map(func(v): return v.id))
-        if result["ok"]:
-            respostaIA.text = "Grafo correto! Avaliando justificativa..."
-            avaliar_resposta()
-        else:
-            respostaIA.text = "O ciclo não é Euleriano. Revise as propriedades!"
-    else:
-        respostaIA.text = "O grafo deve ter {0} vértices (tem {1}) e {2} arestas (tem {3})!".format([graph.max_vertices, vertices.size(), graph.max_edges, edges.size()])
+    avaliar_resposta()
 
 func es_ciclo_euleriano() -> Dictionary:
     if vertices.size() == 0 or edges.size() == 0:
@@ -169,7 +168,6 @@ func _vizinhos(v: Variant) -> Array:
         elif e["to"] == v and not result.has(e["from"]):
             result.append(e["from"])
     return result
-
 
 func _on_button_return_to_menu_pressed() -> void:
     get_tree().change_scene_to_file("res://main.tscn")

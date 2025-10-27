@@ -1,8 +1,5 @@
 extends Control
 
-# -----------------------
-# Constantes 3x2
-# -----------------------
 const COLUMNS: int = 3
 const ROWS: int = 2
 const ITEMS_PER_PAGE: int = COLUMNS * ROWS
@@ -164,7 +161,6 @@ func _make_thumb(item: Dictionary, index: int, cell_size: Vector2) -> Control:
     btn.focus_mode = Control.FOCUS_NONE
     pad.add_child(btn)
 
-    # conectar o sinal pressed passando index de forma robusta
     btn.connect("pressed", Callable(self, "_on_thumb_pressed").bind(index))
 
     return wrapper
@@ -187,7 +183,6 @@ func _refresh_page() -> void:
     btn_prev.disabled = current_page <= 0
     btn_next.disabled = current_page >= total_pages - 1
     grid_thumbs.queue_sort()
-    grid_thumbs.call_deferred("minimum_size_changed")
 
 func set_cell_size(new_size: Vector2) -> void:
     cell_size_param = new_size
@@ -198,8 +193,6 @@ func _on_thumb_pressed(index: int) -> void:
     _load_question_scene(questions_list[index]["path"])
 
 func _load_question_scene(scene_path: String) -> void:
-
-    # troca de cena para abrir em tela cheia
     var err = get_tree().change_scene_to_file(scene_path)
     set_meta("last_loaded_index", null)
 

@@ -6,9 +6,9 @@
       "title": "Ciclo Euleriano"
     },
     {
-      "path": "res://questions/question_euleriano.tscn",
+      "path": "res://questions/question_hamiltoniano_completo.tscn",
       "image": "res://svgs/vertex_dragged.svg",
-      "title": "Ciclo Euleriano"
+      "title": "Ciclo Hamiltoniano"
     },
     {
       "path": "res://questions/question_euleriano.tscn",
