@@ -15,6 +15,13 @@ func _ready() -> void:
 func graph_finish_loaded():
     graph_is_loaded = true
 
+func _pick_edge_at(click_pos: Vector2) -> int:
+    var e_index = super._pick_edge_at(click_pos)
+    if e_index >= 0 and edges[e_index] in new_edges_list:
+        return e_index
+    else:
+        return -1
+
 func remove_vertex(v: Vertex) -> void:
     if v in new_vertices_list:
         new_vertices_list.erase(v)

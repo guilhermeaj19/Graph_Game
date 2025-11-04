@@ -48,7 +48,7 @@ func load_api_key():
         api_key = config.get_value("api", "key", "")
         print("API Key carregada com sucesso.")
     else:
-        print("Erro ao carregar API Key:", str(err))
+        print("Erro ao carregar API Key:", str(err), "\nFile: ", api_config_path)
 
 ## Creates an LLMConfig instance from a dictionary.
 ##

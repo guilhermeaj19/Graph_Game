@@ -11,70 +11,14 @@
       "title": "Ciclo Hamiltoniano"
     },
     {
-      "path": "res://questions/question_euleriano.tscn",
+      "path": "res://questions/question_euleriano_completar.tscn",
       "image": "res://svgs/vertex_selected.svg",
-      "title": "Ciclo Euleriano3"
+      "title": "Ciclo Euleriano Completar"
     },
         {
-      "path": "res://questions/question_euleriano.tscn",
+      "path": "res://questions/question_coloracao_completo.tscn",
       "image": "res://icon.svg",
-      "title": "Ciclo Euleriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://svgs/vertex_dragged.svg",
-      "title": "Ciclo Euleriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Euleriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Euleriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Eulerian5o"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://svgs/vertex_dragged.svg",
-      "title": "Ciclo Euleriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Eu6leriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Euleriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://svgs/vertex_selected.svg",
-      "title": "Ciclo Eu8leriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Euleriano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Eule12riano"
-    },
-        {
-      "path": "res://questions/question_euleriano.tscn",
-      "image": "res://icon.svg",
-      "title": "Ciclo Eul12eriano"
+      "title": "Coloração Grafo Completo"
     }
-    
   ]
 }

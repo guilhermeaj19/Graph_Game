@@ -66,9 +66,9 @@ wrap_mode = 1
 [node name="ButtonSend" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva"]
 layout_mode = 0
 offset_left = 327.0
-offset_top = 202.0
+offset_top = 228.0
 offset_right = 374.0
-offset_bottom = 233.0
+offset_bottom = 259.0
 text = "Send"
 
 [node name="RespostaIA" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer"]
@@ -98,7 +98,7 @@ size_flags_stretch_ratio = 3.45
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GraphEditor2" parent="ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2" instance=ExtResource("2_r42c5")]
+[node name="GraphEditor" parent="ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2" instance=ExtResource("2_r42c5")]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.45

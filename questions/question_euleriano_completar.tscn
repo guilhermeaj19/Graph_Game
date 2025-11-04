@@ -54,6 +54,7 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Complete o grafo utilizando 0 vértices e 2 arestas, de forma que possua um ciclo euleriano . No campo abaixo, justifique seu raciocínio."
 autowrap_mode = 3
 
 [node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
@@ -94,8 +95,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.45
 script = ExtResource("3_svji3")
-max_new_vertices = 4
-max_new_edges = 4
+max_new_vertices = 0
+max_new_edges = 2
 new_vertices_list = []
 new_edges_list = []
 graph_file_path = ""

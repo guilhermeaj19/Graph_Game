@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://x7imlnhtc480" path="res://questions/question_euleriano.gd" id="1_dmo6a"]
 [ext_resource type="PackedScene" uid="uid://cnihu3ka5c5ul" path="res://scenes/GraphEditor.tscn" id="2_x317v"]
-[ext_resource type="Script" uid="uid://qpnqp3mgn3m7" path="res://scripts/LimitedGraphEditor.gd" id="3_ri6nh"]
+[ext_resource type="Script" uid="uid://ciddb7hxmqbxu" path="res://scripts/PartialStaticGraphEditor.gd" id="3_87pq1"]
 [ext_resource type="Script" uid="uid://c3u5nmi5oxh5v" path="res://addons/godot_llm_framework/llm.gd" id="4_rnetl"]
 [ext_resource type="Script" uid="uid://cmhtv0cbbkpmb" path="res://addons/godot_llm_framework/llm_config.gd" id="5_4rfha"]
 
@@ -94,9 +94,11 @@ text = "Return to Menu"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.45
-script = ExtResource("3_ri6nh")
-max_vertices = 4
-max_edges = 4
+script = ExtResource("3_87pq1")
+max_new_vertices = 4
+max_new_edges = 4
+new_vertices_list = []
+new_edges_list = []
 graph_file_path = ""
 
 [node name="LLM" type="Node" parent="."]
