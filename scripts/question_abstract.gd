@@ -49,6 +49,10 @@ func construct_prompt() -> Dictionary:
         },
         {
          "role": "user", 
+         "content": "Também leve em consideração que a parte objetiva da questão está correta. Seu objetivo é apenas avaliar a resposta discursiva"
+        },
+        {
+         "role": "user", 
          "content": "O formato da resposta deve ser: 'Nota: <Nota> \n 'Justificativa:'" 
         }
         ]

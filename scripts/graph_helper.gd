@@ -90,3 +90,43 @@ func _vizinhos(v: Variant) -> Array:
         elif e["to"] == v and not result.has(e["from"]):
             result.append(e["from"])
     return result
+
+func bellman_ford(vertice_s: int, dirigido: bool = true):
+    
+    var _arestas = edges
+    
+    if not dirigido:
+        for i in range(edges.size()):
+            var e = edges[i]
+            _arestas.push_back({"to": e["from"], "from": e["to"], "weight": e["weight"]})
+    
+    var distancia = {}
+    var antecessor = {}
+    
+    for vertice in vertices:
+        distancia[vertice] = INF
+        antecessor[vertice] = null
+
+    distancia[vertice_s] = 0
+
+    for i in range(vertices.size() - 1):
+        for aresta in _arestas:
+            var u = aresta["from"]
+            var v = aresta["to"]
+            var peso = aresta["weight"]
+            
+            if distancia[u] != INF and distancia[v] > distancia[u] + peso:
+                distancia[v] = distancia[u] + peso
+                antecessor[v] = u
+                
+
+    for aresta in _arestas:
+        var u = aresta["from"]
+        var v = aresta["to"]
+        var peso = aresta["weight"]
+        
+        if distancia[u] != INF and distancia[v] > distancia[u] + peso:
+            print("ERRO: O grafo contém um ciclo de peso negativo!")
+            return [false, null, null]
+
+    return [true, distancia, antecessor]

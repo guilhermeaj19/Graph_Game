@@ -15,10 +15,15 @@
       "image": "res://svgs/vertex_selected.svg",
       "title": "Ciclo Euleriano Completar"
     },
-        {
+    {
       "path": "res://questions/question_coloracao_completo.tscn",
       "image": "res://icon.svg",
       "title": "Coloração Grafo Completo"
+    },
+    {
+      "path": "res://questions/question_caminho_minimo.tscn",
+      "image": "res://icon.svg",
+      "title": "Caminho Mínimo"
     }
   ]
 }

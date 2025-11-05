@@ -113,20 +113,20 @@ func _make_thumb(item: Dictionary, index: int, cell_size: Vector2) -> Control:
     center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     col.add_child(center)
 
-    var img := TextureRect.new()
-    img.name = "thumb_img"
-    img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-    img.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    img.size_flags_horizontal = 0
-    img.size_flags_vertical = 0
-    img.custom_minimum_size = Vector2(int(cell_size.x * 0.7), int(cell_size.y * 0.7))
-    center.add_child(img)
-    if item.has("image") and str(item.image) != "":
-        var path := str(item.image)
-        if ResourceLoader.exists(path):
-            var tex := ResourceLoader.load(path)
-            if tex and tex is Texture2D:
-                img.texture = tex
+    #var img := TextureRect.new()
+    #img.name = "thumb_img"
+    #img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    #img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    #img.size_flags_horizontal = 0
+    #img.size_flags_vertical = 0
+    #img.custom_minimum_size = Vector2(int(cell_size.x * 0.7), int(cell_size.y * 0.7))
+    #center.add_child(img)
+    #if item.has("image") and str(item.image) != "":
+        #var path := str(item.image)
+        #if ResourceLoader.exists(path):
+            #var tex := ResourceLoader.load(path)
+            #if tex and tex is Texture2D:
+                #img.texture = tex
 
     # Label título abaixo da imagem
     var title := Label.new()

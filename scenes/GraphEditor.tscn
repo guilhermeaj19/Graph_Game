@@ -7,7 +7,9 @@
 [sub_resource type="QuadMesh" id="QuadMesh_l02cc"]
 
 [sub_resource type="MultiMesh" id="MultiMesh_354rq"]
+instance_count = 9
 mesh = SubResource("QuadMesh_l02cc")
+buffer = PackedFloat32Array(626.1427, -0.07759224, 0, 469.5395, 12.14824, 3.9992473, 0, 523.4712, 258.11264, 2.6789818, 0, 285.5244, -232.79277, 2.9703631, 0, 401.0007, -341.62445, 2.3603556, 0, 659.78955, -249.69559, -3.229353, 0, 405.62863, 135.9736, 3.4274387, 0, 898.5886, -225.99236, 2.0621989, 0, 417.4803, 493.1064, -0.08054831, 0, 696.593, 9.931736, 3.999189, 0, 266.62054, -214.61949, 2.4289627, 0, 884.012, -164.03114, -3.1780717, 0, 181.3393, 1.6859778, -3.9999528, 0, 155.39188, 346.96588, 0.019436585, 0, 295.9147, 251.73712, -1.6101996, 0, 280.41745, 110.702385, 3.6615922, 0, 177.78296, -493.10638, 0.08054821, 0, 744.95386, -9.931724, -3.999189, 0, 249.19086)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_h4cs2"]
 _surfaces = [{
@@ -20,7 +22,9 @@ _surfaces = [{
 }]
 
 [sub_resource type="MultiMesh" id="MultiMesh_a3che"]
+instance_count = 9
 mesh = SubResource("ArrayMesh_h4cs2")
+buffer = PackedFloat32Array(15.996989, -0.31036896, 0, 798.60785, 0.31036896, 15.996989, 0, 529.8557, 11.881453, 10.715927, 0, 426.4622, -10.715927, 11.881453, 0, 273.8884, -12.917412, 9.441422, 0, 476.05994, -9.441422, -12.917412, 0, 271.3394, 8.2487955, 13.709755, 0, 974.82416, -13.709755, 8.2487955, 0, 290.77435, 15.996756, -0.32219324, 0, 959.143, 0.32219324, 15.996756, 0, 271.9086, -12.712287, 9.715851, 0, 763.99, -9.715851, -12.712287, 0, 89.60788, 0.07774634, -15.999811, 0, 156.31262, 15.999811, 0.07774634, 0, 485.39746, 14.646369, -6.4407983, 0, 420.93237, 6.4407983, 14.646369, 0, 239.57495, -15.996756, 0.32219285, 0, 482.40387, -0.32219285, -15.996756, 0, 243.9028)
 
 [node name="GraphEditor" type="Control"]
 layout_mode = 3
@@ -32,7 +36,9 @@ grow_vertical = 2
 script = ExtResource("1_lupl7")
 VertexScene = ExtResource("2_t7pmw")
 WeightDisplayScene = ExtResource("3_354rq")
-graph_file_path = "res://graphs/eulerian_incomplete_graph.json"
+graph_type = 0
+ponderado = true
+graph_file_path = "res://graphs/caminho_minimo.json"
 metadata/_custom_type_script = "uid://d23da056etjjn"
 
 [node name="EdgesBatch" type="MultiMeshInstance2D" parent="."]
