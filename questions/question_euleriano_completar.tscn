@@ -54,7 +54,7 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Complete o grafo utilizando 0 vértices e 2 arestas, de forma que possua um ciclo euleriano . No campo abaixo, justifique seu raciocínio."
+text = "Complete o grafo para que tenha 5 vértices e 6 arestas e possua um ciclo euleriano. No campo abaixo, justifique seu raciocínio."
 autowrap_mode = 3
 
 [node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
@@ -70,7 +70,7 @@ offset_left = 327.0
 offset_top = 164.0
 offset_right = 374.0
 offset_bottom = 195.0
-text = "Send"
+text = "Enviar"
 
 [node name="RespostaIA" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer"]
 z_index = 1
@@ -88,7 +88,7 @@ offset_left = 10.0
 offset_top = 299.0
 offset_right = 140.0
 offset_bottom = 330.0
-text = "Return to Menu"
+text = "Retornar ao menu"
 
 [node name="GraphEditor" parent="ColorRect/SplitContainer" instance=ExtResource("2_vtscm")]
 layout_mode = 2
@@ -99,6 +99,7 @@ max_new_vertices = 0
 max_new_edges = 2
 new_vertices_list = []
 new_edges_list = []
+graph_type = 1
 graph_file_path = ""
 
 [node name="LLM" type="Node" parent="."]

@@ -55,7 +55,7 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Coloque na lista ao lado os valores de distância mínima a partir do vértice 5 (se inalcansável, selecione INF). Explique seu raciocínio no campo abaixo"
+text = "Analisando o grafo nao dirigido, coloque na lista ao lado os valores de distância mínima a partir do vértice 4 (se inalcançável, selecione INF). Explique seu raciocínio no campo abaixo"
 autowrap_mode = 3
 
 [node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
@@ -67,11 +67,11 @@ wrap_mode = 1
 
 [node name="ButtonSend" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva"]
 layout_mode = 0
-offset_left = 327.0
-offset_top = 197.0
-offset_right = 374.0
-offset_bottom = 228.0
-text = "Send"
+offset_left = 324.0
+offset_top = 199.0
+offset_right = 381.0
+offset_bottom = 230.0
+text = "Enviar"
 
 [node name="RespostaIA" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer"]
 z_index = 1
@@ -89,7 +89,7 @@ offset_left = 10.0
 offset_top = 239.0
 offset_right = 140.0
 offset_bottom = 270.0
-text = "Return to Menu"
+text = "Retornar ao menu"
 
 [node name="VSplitContainer2" type="VSplitContainer" parent="ColorRect/SplitContainer"]
 layout_mode = 2
@@ -106,6 +106,8 @@ dragging_enabled = false
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.45
+graph_type = 1
+ponderado = true
 editavel = false
 graph_file_path = ""
 

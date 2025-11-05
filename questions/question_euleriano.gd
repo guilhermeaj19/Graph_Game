@@ -35,5 +35,5 @@ func _ready() -> void:
     graph.max_new_edges = 4#randi_range(graph.max_new_vertices,max_new_possible_edges)
     enunciado.text =   ("Crie um grafo com ciclo euleriano utilizando {0} vértices e {1} arestas. " +\
                        "No campo abaixo, justifique seu raciocínio.").format([graph.max_new_vertices, graph.max_new_edges])
-    
+    graph.graph_is_loaded = true
     await get_tree().process_frame

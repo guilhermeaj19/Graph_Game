@@ -130,3 +130,50 @@ func bellman_ford(vertice_s: int, dirigido: bool = true):
             return [false, null, null]
 
     return [true, distancia, antecessor]
+    
+var _dsu_parent: Dictionary = {}
+
+func kruskal():
+    var A = []
+    _dsu_parent.clear()
+    
+    for v_label in vertices:
+        _dsu_parent[v_label] = v_label
+
+    var E_linha = edges.duplicate()
+    
+    E_linha.sort_custom(Callable(self, "_sort_arestas_por_peso"))
+
+    var peso_total = 0.0
+
+    for aresta in E_linha:
+        var u = aresta["from"]
+        var v = aresta["to"]
+        var peso = aresta["weight"]
+        
+        if _dsu_find(u) != _dsu_find(v):
+            A.push_back(aresta)
+            peso_total += peso
+            
+            _dsu_uniao(u, v)
+
+
+    return peso_total
+
+func _sort_arestas_por_peso(a: Dictionary, b: Dictionary) -> bool:
+    return a["weight"] < b["weight"]
+
+
+func _dsu_find(v_label: int):
+    if _dsu_parent[v_label] == v_label:
+        return v_label
+        
+    _dsu_parent[v_label] = _dsu_find(_dsu_parent[v_label])
+    return _dsu_parent[v_label]
+
+func _dsu_uniao(u_label: int, v_label: int):
+    var raiz_u = _dsu_find(u_label)
+    var raiz_v = _dsu_find(v_label)
+    
+    if raiz_u != raiz_v:
+        _dsu_parent[raiz_v] = raiz_u

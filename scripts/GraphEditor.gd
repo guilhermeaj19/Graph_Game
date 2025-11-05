@@ -121,8 +121,8 @@ func _ready() -> void:
     
     if editavel:
         if mode_option.get_item_count() == 0:
-            mode_option.add_item("Add/Edit", Mode.ADD)
-            mode_option.add_item("Delete", Mode.DELETE)
+            mode_option.add_item("Add/Editar", Mode.ADD)
+            mode_option.add_item("Deletar", Mode.DELETE)
             mode_option.select(mode)
     else:
         mode = Mode.STATIC

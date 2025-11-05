@@ -1,12 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://ursghfv2d4qt"]
+[gd_scene load_steps=6 format=3 uid="uid://d3541g3grxu60"]
 
-[ext_resource type="Script" uid="uid://ba3nj1vdbf8hi" path="res://questions/question_coloracao_completo.gd" id="1_267jn"]
-[ext_resource type="PackedScene" uid="uid://cnihu3ka5c5ul" path="res://scenes/GraphEditor.tscn" id="2_r42c5"]
-[ext_resource type="Script" uid="uid://c3u5nmi5oxh5v" path="res://addons/godot_llm_framework/llm.gd" id="3_k76tv"]
-[ext_resource type="Script" uid="uid://cmhtv0cbbkpmb" path="res://addons/godot_llm_framework/llm_config.gd" id="4_s6p7m"]
+[ext_resource type="Script" uid="uid://dv0rc5yc5mt87" path="res://questions/question_ordenacao_topologica.gd" id="1_75ehj"]
+[ext_resource type="PackedScene" uid="uid://cnihu3ka5c5ul" path="res://scenes/GraphEditor.tscn" id="2_0ct06"]
+[ext_resource type="Script" uid="uid://c3u5nmi5oxh5v" path="res://addons/godot_llm_framework/llm.gd" id="3_pkn41"]
+[ext_resource type="Script" uid="uid://cmhtv0cbbkpmb" path="res://addons/godot_llm_framework/llm_config.gd" id="4_q7pvd"]
 
 [sub_resource type="Resource" id="Resource_7mycd"]
-script = ExtResource("4_s6p7m")
+script = ExtResource("4_q7pvd")
 model = "gemini-flash-latest"
 metadata/_custom_type_script = "uid://cmhtv0cbbkpmb"
 
@@ -17,7 +17,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_267jn")
+script = ExtResource("1_75ehj")
 metadata/_custom_type_script = "uid://x7imlnhtc480"
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -36,11 +36,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+dragging_enabled = false
 
 [node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.8
+dragging_enabled = false
 
 [node name="VSplitContainer" type="VSplitContainer" parent="ColorRect/SplitContainer/VSplitContainer"]
 layout_mode = 2
@@ -53,7 +55,7 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Quantas cores são necessárias para colorir o grafo ao lado? Explique seu raciocínio no cambo abaixo."
+text = "Analisando o grafo, coloque na lista ao lado uma possível ordenação topológica, com os IDs. Explique seu raciocínio no campo abaixo."
 autowrap_mode = 3
 
 [node name="RespostaDiscursiva" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
@@ -66,9 +68,9 @@ wrap_mode = 1
 [node name="ButtonSend" type="Button" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva"]
 layout_mode = 0
 offset_left = 327.0
-offset_top = 228.0
+offset_top = 227.0
 offset_right = 374.0
-offset_bottom = 259.0
+offset_bottom = 258.0
 text = "Enviar"
 
 [node name="RespostaIA" type="TextEdit" parent="ColorRect/SplitContainer/VSplitContainer"]
@@ -93,28 +95,34 @@ text = "Retornar ao menu"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.45
+dragging_enabled = false
 
 [node name="VSplitContainer2" type="VSplitContainer" parent="ColorRect/SplitContainer/VSplitContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
+dragging_enabled = false
 
-[node name="GraphEditor" parent="ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2" instance=ExtResource("2_r42c5")]
+[node name="GraphEditor" parent="ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2" instance=ExtResource("2_0ct06")]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.45
-graph_type = 1
 editavel = false
 graph_file_path = ""
 
-[node name="InputNumber" type="SpinBox" parent="ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 6
-size_flags_stretch_ratio = 0.5
-suffix = "Cores"
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.3
+vertical_scroll_mode = 0
+
+[node name="list_area" type="HBoxContainer" parent="ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2/ScrollContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.3
+alignment = 1
 
 [node name="LLM" type="Node" parent="."]
-script = ExtResource("3_k76tv")
+script = ExtResource("3_pkn41")
 config = SubResource("Resource_7mycd")
 debug = true
 metadata/_custom_type_script = "uid://c3u5nmi5oxh5v"

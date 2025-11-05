@@ -24,6 +24,16 @@
       "path": "res://questions/question_caminho_minimo.tscn",
       "image": "res://icon.svg",
       "title": "Caminho Mínimo"
+    },
+    {
+      "path": "res://questions/question_mst.tscn",
+      "image": "res://icon.svg",
+      "title": "Árvore Mínima"
+    },
+    {
+      "path": "res://questions/question_ordenacao_topologica.tscn",
+      "image": "res://icon.svg",
+      "title": "Ordenação Topológica"
     }
   ]
 }
