@@ -15,10 +15,14 @@ func avaliar_resposta():
 
 func set_ia_feedback(text: String = ""):
     if text == "":
+        
         var result = await llm.generate_response("", construct_prompt())
-        respostaIA.text = ""
-        for part in result.content:
-            respostaIA.text += part.candidates[0].content.parts[0].text
+        if result.content:
+            respostaIA.text = ""
+            for part in result.content:
+                respostaIA.text += part.candidates[0].content.parts[0].text
+        else:
+            respostaIA.text += "\nErro ao se conectar com a LLM. Verifique a conexão e tente novamente."
     else:
         respostaIA.text = text
 
