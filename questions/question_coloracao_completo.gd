@@ -24,7 +24,7 @@ func construct_prompt() -> Dictionary:
 
 func _ready() -> void:
     graph        = $ColorRect/SplitContainer/VSplitContainer2/VSplitContainer2/GraphEditor
-    enunciado    = $ColorRect/SplitContainer/VSplitContainer/VSplitContainer/Label
+    enunciado    = $ColorRect/SplitContainer/VSplitContainer/VSplitContainer/Enunciado
     resposta     = $ColorRect/SplitContainer/VSplitContainer/VSplitContainer/RespostaDiscursiva
     respostaIA   = $ColorRect/SplitContainer/VSplitContainer/RespostaIA
     llm          = $LLM

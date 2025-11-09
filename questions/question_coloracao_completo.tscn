@@ -48,7 +48,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 2.16
 dragging_enabled = false
 
-[node name="Label" type="Label" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
+[node name="Enunciado" type="Label" parent="ColorRect/SplitContainer/VSplitContainer/VSplitContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0

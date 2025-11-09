@@ -21,7 +21,7 @@ enum State {
 }
 
 enum Mode {
-    ADD,
+    ADD_EDIT,
     DELETE,
     SELECT,
     STATIC
@@ -36,7 +36,7 @@ enum TypeGraph {
 @export var ponderado: bool = false
 @export var editavel: bool = true
 
-var mode: Mode = Mode.ADD
+var mode: Mode = Mode.ADD_EDIT
 
 var vertices: Array[Vertex] = []
 var edges:    Array  = []
@@ -121,7 +121,7 @@ func _ready() -> void:
     
     if editavel:
         if mode_option.get_item_count() == 0:
-            mode_option.add_item("Add/Editar", Mode.ADD)
+            mode_option.add_item("Add/Editar", Mode.ADD_EDIT)
             mode_option.add_item("Deletar", Mode.DELETE)
             mode_option.select(mode)
     else:
@@ -243,7 +243,7 @@ func _state_idle_input(event) -> void:
         var hit_edge   = _pick_edge_at(event.position)
         match event.button_index:
             MOUSE_BUTTON_MASK_LEFT:
-                if mode == Mode.ADD:
+                if mode == Mode.ADD_EDIT:
                     if hit_vertex:
                         selected_vertex = hit_vertex
                         selected_vertex.drag()
@@ -605,7 +605,7 @@ func get_public_edges():
     return edges
 
 func enable_editing(enabled: bool) -> void:
-    mode = Mode.ADD if enabled else Mode.STATIC
+    mode = Mode.ADD_EDIT if enabled else Mode.STATIC
     if mode_option:
         mode_option.select(int(mode))
 
