@@ -5,7 +5,7 @@ extends Question_Abstract
 
 func avaliar_resposta():
     GraphHelper.set_vertices_edges(vertices.map(func(x): return x.id), edges.map(func(e): return {"from": e["from"].id, "to": e["to"].id, "weight": e["weight"]}))
-    print(GraphHelper.kruskal())
+
     if sum_weights_mst.value != GraphHelper.kruskal():
         set_ia_feedback("Resposta errada. Analise o grafo com cuidado!")
         return
@@ -13,6 +13,19 @@ func avaliar_resposta():
         set_ia_feedback("Resposta correta. Analisando feedback...")
    
     set_ia_feedback()
+
+func set_ia_feedback(text: String = ""):
+    if text == "":
+        
+        var result = await llm.generate_response("", construct_prompt())
+        if result.content:
+            respostaIA.text = ""
+            for part in result.content:
+                respostaIA.text += part.candidates[0].content.parts[0].text
+        else:
+            respostaIA.text += "\nErro ao se conectar com a LLM. Verifique a conexão e tente novamente."
+    else:
+        respostaIA.text = text
 
 func construct_prompt() -> Dictionary:
     var params = super.construct_prompt()

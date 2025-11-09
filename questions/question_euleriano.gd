@@ -28,11 +28,11 @@ func _ready() -> void:
     vertices = graph.vertices
     edges = graph.edges
     
-    var max_new_v = 4#randi_range(3,7)
+    var max_new_v = 5#randi_range(3,7)
     graph.max_new_vertices = max_new_v
     var max_new_possible_edges = round(max_new_v*(max_new_v-1)/2)
     
-    graph.max_new_edges = 4#randi_range(graph.max_new_vertices,max_new_possible_edges)
+    graph.max_new_edges = 6#randi_range(graph.max_new_vertices,max_new_possible_edges)
     enunciado.text =   ("Crie um grafo com ciclo euleriano utilizando {0} vértices e {1} arestas. " +\
                        "No campo abaixo, justifique seu raciocínio.").format([graph.max_new_vertices, graph.max_new_edges])
     graph.graph_is_loaded = true

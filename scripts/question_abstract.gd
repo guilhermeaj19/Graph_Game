@@ -12,6 +12,7 @@ class_name Question_Abstract
 
 func avaliar_resposta():
     pass
+    #set_ia_feddback()
 
 func set_ia_feedback(text: String = ""):
     if text == "":
@@ -25,7 +26,6 @@ func set_ia_feedback(text: String = ""):
             respostaIA.text += "\nErro ao se conectar com a LLM. Verifique a conexão e tente novamente."
     else:
         respostaIA.text = text
-
 
 func construct_prompt() -> Dictionary:
     var messages =  [
